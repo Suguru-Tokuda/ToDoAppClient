@@ -9,15 +9,16 @@ package models;
  *
  * @author Suguru
  */
-public class Assignment {
-    
+public class ListAssignment {
+
     private String id;
     private String userid;
     private String todolistid;
-    
-    public Assignment(){}
-    
-    public Assignment(String userid, String listid) {
+
+    public ListAssignment() {
+    }
+
+    public ListAssignment(String userid, String listid) {
         this.userid = userid;
         this.todolistid = listid;
     }
@@ -63,7 +64,5 @@ public class Assignment {
     public void setToDoListId(String todolistid) {
         this.todolistid = todolistid;
     }
-    
-    
-    
+
 }

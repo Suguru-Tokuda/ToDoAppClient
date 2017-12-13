@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package models;
 
 /**
@@ -12,14 +7,14 @@ package models;
 public class ToDoList {
 
     private String id;
-    private String listname;
+    private String todolistname;
     private boolean active;
 
     public ToDoList() {
     }
 
-    public ToDoList(String id) {
-
+    public ToDoList(String listname, boolean active) {
+        this.todolistname = listname;
     }
 
     /**
@@ -37,17 +32,17 @@ public class ToDoList {
     }
 
     /**
-     * @return the listname
+     * @return the todolistname
      */
-    public String getListname() {
-        return listname;
+    public String getToDoListname() {
+        return todolistname;
     }
 
     /**
-     * @param listname the listname to set
+     * @param listname the todolistname to set
      */
-    public void setListname(String listname) {
-        this.listname = listname;
+    public void setListname(String todolistname) {
+        this.todolistname = todolistname;
     }
 
     /**

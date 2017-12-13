@@ -40,20 +40,19 @@ public class ListController {
     @Autowired
     ItemAPI itemAPI;
     
-    String userid;
+    String useridInSession;
     List<ToDoList> tempList;
     
     @RequestMapping(value = "/showlists", method = RequestMethod.GET)
     public String showLists(Model model, HttpSession session) throws IOException, ParseException {
-        userid = (String) session.getAttribute("userid");
-        if (userid == null) {
+        useridInSession = (String) session.getAttribute("userid");
+        if (useridInSession == null) {
             return "redirect:/";
         }
         
-        tempList = toDoListStore.getToDoListsForUserid(userid);
+        tempList = toDoListStore.getToDoListsForUserid(useridInSession);
         model.addAttribute("list", tempList);
         return "viewlist";
-    }
-    
+    }    
     
 }

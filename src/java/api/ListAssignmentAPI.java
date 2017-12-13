@@ -4,13 +4,13 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import models.Assignment;
+import models.ListAssignment;
 
 /**
  *
  * @author Suguru
  */
-public class AssignmentAPI {
+public class ListAssignmentAPI {
     
     private static String BASE_URL = "http://gfish3.it.ilstu.edu:8080/stokuda_fall2017_ToDoAppWS/webresources/entities.assignments/";
     
@@ -18,7 +18,7 @@ public class AssignmentAPI {
         return BASE_URL;
     }
     
-    public boolean postAssignment(Assignment assignment) {
+    public boolean postAssignment(ListAssignment assignment) {
         Client client = ClientBuilder.newClient();
         
         String response = client
@@ -29,7 +29,7 @@ public class AssignmentAPI {
         return true;
     }
     
-    public boolean putAssignment(Assignment assignment, String id) {
+    public boolean putAssignment(ListAssignment assignment, String id) {
         Client client = ClientBuilder.newClient();
         String putURL = BASE_URL + id;
         String response = client

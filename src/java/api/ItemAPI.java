@@ -66,4 +66,14 @@ public class ItemAPI {
         return response;
     }
     
+    public String getItemsByToDoListId(String toDoListId) {
+                Client client = ClientBuilder.newClient();
+        String requestURL = BASE_URL + "getItemsByToDoListId/" + toDoListId;
+        String response = client
+                .target(requestURL)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        return response;
+    }
+    
 }

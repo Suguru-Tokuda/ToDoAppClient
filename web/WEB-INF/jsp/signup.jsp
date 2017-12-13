@@ -28,22 +28,10 @@
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                        <c:if test="${!empty userid}">
+                        <c:if test="${!empty username}">
                         <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
                         </c:if>
                 </ul>
-                <c:if test="${!empty userid}">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Hello, ${username}</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="${pageContext.request.contextPath}/mydecks"><span class="glyphicon glyphicon-folder-open"></span> My Decks</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/profile"><span class="glyphicon glyphicon-book"></span> Profile</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
-                                </ul>
-                        </ul>
-                    </c:if>
             </div>
         </div>
     </nav>
@@ -54,23 +42,27 @@
         </div>
         <div style="margin-top: 30px;"></div>
         <div class="col-md-3 col-md-offset-4 col-sm-3 col-sm-offset-4">
-            <h2 class="text-center">Sing in</h2>
             <div class="form-grup">
+                <h3>Sing up:</h3>
                 <form method="post">
                     <div class="form-group">
-                        <label class="control-label">User name or Email:</label>
-                        <input type="text" class="form-control" name="userid" />
-                        <label class="control-label">Password:</label>                <!--</div>-->
-                        <input type="password" class="form-control" name="signinPassword" />
+                        <label class="control-label">User name<br> (No space & 6 characters or more):</label>
+                        <input type="text" class="form-control" name="username" />
+                        <label class="control-label">Email:</label>
+                        <input type="text" class="form-control" name="email" />
+                        <label class="control-label">Password:</label><br>
+                        <label class="control-label">- At least 8 characters long</label><br>
+                        <label class="control-label">- Include one or more numbers and capital letters</label>
+                        <label class="control-label">- Include at least one special character: "-", "@", "#", and "%"</label>
+                        <input type="password" class="form-control" name="signupPassword" />
+                        <label class="control-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="confPassword" />
                         <div style="margin-top: 20px;"></div>
-                        <input type="submit" class="btn btn-primary col-md-offset-4" formaction="${pageContext.request.contextPath}/processsignin" value="Sign in" />
+                        <input type="submit" class="btn btn-primary" formaction="${pageContext.request.contextPath}/processsignup" value="Sing Up" /><br>
                         <div style="margin-top: 20px;"></div>
-                        <label class="control-label">Not a Member? <a href="${pageContext.request.contextPath}/signup">Sign up</a></label><br>
-                        <div style="margin-top: 20px;"></div>
-                        <label class="control-label" style="color: red;">${signinErrorMsg}</label>
+                        <label class="control-label" style="color: red;">${signupErrorMsg}</label>
                     </div>
                 </form>
-                <div style="margin-top: 35px;"></div>
             </div>
         </div>
     </main>

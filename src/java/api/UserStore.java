@@ -9,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -18,7 +19,8 @@ public class UserStore {
 
     private List<User> tempUserList;
     private User tempUser;
-    private final UserAPI userAPI = new UserAPI();
+    @Autowired
+    private UserAPI userAPI;
 
     ObjectMapper mapper = new ObjectMapper();
     JSONParser jParser = new JSONParser();

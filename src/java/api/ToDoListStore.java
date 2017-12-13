@@ -10,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -19,7 +20,8 @@ public class ToDoListStore {
     
     private List<ToDoList> tempToDoListList;
     private ToDoList tempToDoList;
-    private final ToDoListAPI toDoListAPI = new ToDoListAPI();
+    @Autowired
+    private ToDoListAPI toDoListAPI;
 
     ObjectMapper mapper = new ObjectMapper();
     JSONParser jParser = new JSONParser();
