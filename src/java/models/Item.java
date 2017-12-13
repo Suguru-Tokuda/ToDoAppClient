@@ -9,8 +9,20 @@ public class Item {
     private String id;
     private String todolistid;
     private String itemname;
-    private String date;
+    private String due;
     private boolean important;
+    private boolean finished;
+    
+    public Item() {
+    }
+    
+    public Item(String todolistid, String itemname, String due, boolean important, boolean finished) {
+        this.todolistid = todolistid;
+        this.itemname = itemname;
+        this.due = due;
+        this.important = important;
+        this.finished = finished;
+    }
 
     /**
      * @return the id
@@ -58,14 +70,14 @@ public class Item {
      * @return the date
      */
     public String getDate() {
-        return date;
+        return due;
     }
 
     /**
      * @param date the date to set
      */
     public void setDate(String date) {
-        this.date = date;
+        this.due = date;
     }
 
     /**
@@ -81,5 +93,21 @@ public class Item {
     public void setImportant(boolean important) {
         this.important = important;
     }
+
+    /**
+     * @return the finished
+     */
+    public boolean isFinished() {
+        return finished;
+    }
+
+    /**
+     * @param finished the finished to set
+     */
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+    
+    
 
 }
