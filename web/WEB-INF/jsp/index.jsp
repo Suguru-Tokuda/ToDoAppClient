@@ -35,9 +35,9 @@
                 <c:if test="${!empty userid}">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Hello, ${username}</a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> ${email}</a>
                             <ul class="dropdown-menu">
-                                <li><a href="${pageContext.request.contextPath}/mydecks"><span class="glyphicon glyphicon-folder-open"></span> My Decks</a></li>
+                                <li><a href="${pageContext.request.contextPath}/mylists"><span class="glyphicon glyphicon-folder-open"></span> My Lists</a></li>
                                 <li><a href="${pageContext.request.contextPath}/profile"><span class="glyphicon glyphicon-book"></span> Profile</a></li>
                                 <li class="divider"></li>
                                 <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
@@ -58,8 +58,8 @@
             <div class="form-grup">
                 <form method="post">
                     <div class="form-group">
-                        <label class="control-label">User name or Email:</label>
-                        <input type="text" class="form-control" name="userid" />
+                        <label class="control-label">Email:</label>
+                        <input type="text" class="form-control" name="email" />
                         <label class="control-label">Password:</label>                <!--</div>-->
                         <input type="password" class="form-control" name="signinPassword" />
                         <div style="margin-top: 20px;"></div>

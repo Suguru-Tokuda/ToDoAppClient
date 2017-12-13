@@ -28,10 +28,22 @@
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                        <c:if test="${!empty username}">
+                        <c:if test="${!empty userid}">
                         <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
                         </c:if>
                 </ul>
+                <c:if test="${!empty userid}">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> ${email}</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/mylists"><span class="glyphicon glyphicon-folder-open"></span> My Lists</a></li>
+                                <li><a href="${pageContext.request.contextPath}/profile"><span class="glyphicon glyphicon-book"></span> Profile</a></li>
+                                <li class="divider"></li>
+                                <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                            </ul>
+                    </ul>
+                </c:if>
             </div>
         </div>
     </nav>
@@ -41,17 +53,19 @@
             <h1 class="display-3 text-center">To Do List App</h1>
         </div>
         <div style="margin-top: 30px;"></div>
-        <div class="col-md-3 col-md-offset-4 col-sm-3 col-sm-offset-4">
+        <!--<div class="col-md-3 col-md-offset-4 col-sm-3 col-sm-offset-4">-->
             <div class="form-grup">
                 <h3>Account Registered</h3>
                 <table class="table">
                     <tr>
-                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Email</th>
                         <th>Password</th>
                     </tr>
                     <tr>
-                        <td>${user.username}</td>
+                        <td>${user.firstname}</td>
+                        <td>${user.lastname}</td>
                         <td>${user.email}</td>
                         <td>${user.password}</td>
                     </tr>
@@ -59,7 +73,7 @@
                 <div style="margin-top: 30px;"></div>
                 <label class="control-label"><a href="${pageContext.request.contextPath}/">Sign in</a></label><br>
             </div>
-        </div>
+        <!--</div>-->
     </main>
 </body>
 </html>

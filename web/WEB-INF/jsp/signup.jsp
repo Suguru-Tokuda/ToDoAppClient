@@ -28,10 +28,22 @@
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                        <c:if test="${!empty username}">
+                        <c:if test="${!empty userid}">
                         <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
                         </c:if>
                 </ul>
+                <c:if test="${!empty userid}">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Hello, ${email}</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/mydecks"><span class="glyphicon glyphicon-folder-open"></span> My Decks</a></li>
+                                <li><a href="${pageContext.request.contextPath}/profile"><span class="glyphicon glyphicon-book"></span> Profile</a></li>
+                                <li class="divider"></li>
+                                <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                            </ul>
+                    </ul>
+                </c:if>
             </div>
         </div>
     </nav>
@@ -46,8 +58,10 @@
                 <h3>Sing up:</h3>
                 <form method="post">
                     <div class="form-group">
-                        <label class="control-label">User name<br> (No space & 6 characters or more):</label>
-                        <input type="text" class="form-control" name="username" />
+                        <label class="control-label">First name</label>
+                        <input type="text" class="form-control" name="firstname" />
+                        <label class="control-label">Last name</label>
+                        <input type="text" class="form-control" name="lastname" />                        
                         <label class="control-label">Email:</label>
                         <input type="text" class="form-control" name="email" />
                         <label class="control-label">Password:</label><br>

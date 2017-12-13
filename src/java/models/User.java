@@ -12,33 +12,29 @@ package models;
 public class User {
 
     private String id;
-    private String username;
+    private String firstname;
+    private String lastname;
     private String email;
     private String password;
     private boolean confirmed;
 
     public User() {
     }
-
-    public User(String username, String email, String password) {
-        this.username = username;
+    
+    public User(String firstname, String lastname, String email, String password) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.confirmed = false;
     }
 
-    public User(String username, String email, String password, boolean confirmed) {
-        this.username = username;
+    public User(String firstname, String lastname, String email, String password, boolean confirmed) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.confirmed = confirmed;
-    }
-
-    public User(String id, String username, String email, String password) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
     }
 
     /**
@@ -56,17 +52,31 @@ public class User {
     }
 
     /**
-     * @return the userName
+     * @return the firstname
      */
-    public String getUsername() {
-        return username;
+    public String getFirstname() {
+        return firstname;
     }
 
     /**
-     * @param userName the userName to set
+     * @param firstname the firstname to set
      */
-    public void setUsername(String userName) {
-        this.username = userName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    /**
+     * @return the lastname
+     */
+    public String getLastname() {
+        return lastname;
+    }
+
+    /**
+     * @param lastname the lastname to set
+     */
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     /**

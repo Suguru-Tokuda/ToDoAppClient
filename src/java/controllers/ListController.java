@@ -10,6 +10,8 @@ import api.ItemStore;
 import api.ToDoListAPI;
 import api.ToDoListStore;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import models.ToDoList;
@@ -44,6 +46,8 @@ public class ListController {
     
     String useridInSession;
     List<ToDoList> tempToDoList;
+    List<ToDoList> secondTempList;
+    ToDoList tempVal;
     
     @RequestMapping(value = "/getlists", method = RequestMethod.GET)
     public String showLists(Model model, HttpSession session) throws IOException, ParseException {
@@ -53,6 +57,16 @@ public class ListController {
         }
         
         tempToDoList = toDoListStore.getToDoListsForUserid(useridInSession);
+        int index = 0;
+        String dateStr = null;
+
+        for (int i = 0; i < tempToDoList.size(); i++) {
+            tempVal = tempToDoList.get(i);
+            index = tempVal.getCreatedate().indexOf("T");
+            dateStr = tempVal.getCreatedate().substring(0, index);
+            tempVal.setCreatedate(dateStr);
+            tempToDoList.set(i, tempVal);
+        }
         model.addAttribute("lists", tempToDoList);
         return "viewlist";
     }    

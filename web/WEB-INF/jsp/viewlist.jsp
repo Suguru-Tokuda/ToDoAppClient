@@ -29,22 +29,24 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
                         <c:if test="${!empty userid}">
-                        <li><a href="${pageContext.request.contextPath}/showlists">See Lists</a></li>
                         <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
                         </c:if>
                 </ul>
                 <c:if test="${!empty userid}">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Hello, ${username}</a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> ${email}</a>
                             <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/mylists"><span class="glyphicon glyphicon-folder-open"></span> My Lists</a></li>
+                                <li><a href="${pageContext.request.contextPath}/profile"><span class="glyphicon glyphicon-book"></span> Profile</a></li>
+                                <li class="divider"></li>
                                 <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                             </ul>
                     </ul>
                 </c:if>
             </div>
         </div>
-    </nav>                 
+    </nav>               
     <div style="margin-top: 30px;"></div>
     <main role="main" class="container">
         <div class="jumbotron">
@@ -55,17 +57,19 @@
         <!--<h2 class="text-center"></h2>-->
         <div class="form-grup">
             <form method="post">
-                <table class="table table-bordered">
+                <table class="table table-striped table-bordered">
                     <tr>
-                        <th class="col-md-2 col-xs-4">Name</th>
-                        <th class="col-xs-2">Date Made</th>
-                        <th class="col-xs-2">Action</th>
+                        <th class="col-md-4" style="text-align: center;">Name</th>
+                        <th class="col-md-1" style="text-align: center;">Date Made</th>
+                        <th class="col-md-1" style="text-align: center;">View</th>
+                        <th class="col-md-1" style="text-align: center;">Delete</th>
                     </tr>
                     <c:forEach var="list" items="${lists}">
                         <tr>
                             <td>${list.todolistname}</td>
                             <td>${list.createdate}</td>
-                            <td><input class="btn btn-default" value="View Details" /></td>
+                            <td style="text-align: center;"><input class="btn btn-primary btn-sm" style="width: 70px;" value="View" /></td>
+                            <td style="text-align: center;"><input class="btn btn-danger btn-sm" style="width: 70px;" value="Delete"</td>
                         </tr>
                     </c:forEach>
                 </table>

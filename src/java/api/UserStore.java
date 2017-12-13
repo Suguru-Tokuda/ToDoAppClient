@@ -28,7 +28,7 @@ public class UserStore {
     String jsonString;
     JSONArray jsonArray;
 
-    public List<User> getAllUsers() throws ParseException, IOException {
+    public List<User> getAllUsers() {
         jsonString = userAPI.getAllUsers();
 
         mapper = new ObjectMapper();
@@ -41,16 +41,13 @@ public class UserStore {
                 tempUserList.add(tempUser);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempUser = mapper.readValue(jsonObject.toString(), User.class);
-            tempUserList.add(tempUser);
+            System.out.println(ex);
         }
 
         return tempUserList;
     }
 
-    public User getUserForUsername(String username) throws ParseException, IOException {
+    public User getUserForUsername(String username) {
         jsonString = userAPI.getAllUsers();
 
         mapper = new ObjectMapper();
@@ -63,10 +60,7 @@ public class UserStore {
                 tempUserList.add(tempUser);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempUser = mapper.readValue(jsonObject.toString(), User.class);
-            tempUserList.add(tempUser);
+            System.out.println(ex);
         }
         return tempUserList.get(0);
     }

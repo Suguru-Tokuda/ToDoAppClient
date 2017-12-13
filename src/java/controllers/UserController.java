@@ -18,6 +18,7 @@ import models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,13 +46,13 @@ public class UserController {
     private User tempUser;
     private List<User> tempUserList;
 
-    private String useridInSession;
+    private String emailInSession;
     private String usernameInSession;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String viewIndex(HttpSession session, Model model) {
-        useridInSession = (String) session.getAttribute("userid");
-        if (useridInSession != null) {
+        emailInSession = (String) session.getAttribute("email");
+        if (emailInSession != null) {
             return "redirect:/getlists";
         }
         return "index";
@@ -68,8 +69,8 @@ public class UserController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String showSignup(HttpSession session) {
-        useridInSession = (String) session.getAttribute("userid");
-        if (useridInSession != null) {
+        emailInSession = (String) session.getAttribute("userid");
+        if (emailInSession != null) {
             return "redirect:/getlists";
         } else {
             return "signup";
@@ -77,66 +78,67 @@ public class UserController {
     }
 
     @RequestMapping(value = "/processsignin", method = RequestMethod.POST)
-    public String processSignin(@RequestParam("userid") String userid, @RequestParam("signinPassword") String password, Model model, HttpSession session) throws ParseException, IOException, org.json.simple.parser.ParseException {
-        useridInSession = (String) session.getAttribute("userid");
-        if (useridInSession != null) {
+    public String processSignin(@RequestParam("email") String email, @RequestParam("signinPassword") String password, Model model, HttpSession session) throws ParseException, IOException, org.json.simple.parser.ParseException {
+        emailInSession = (String) session.getAttribute("email");
+        if (emailInSession != null) {
             return "redirect:/getlists";
         }
         String signinErrorMsg = "";
-        boolean isFilled = !userid.isEmpty() && !password.isEmpty();
+        boolean isFilled = !email.isEmpty() && !password.isEmpty();
         if (!isFilled) {
             signinErrorMsg = "Fill blanks";
             model.addAttribute("signinErrorMsg", signinErrorMsg);
             return "index";
         } else {
-            boolean isLoggedin = setToLoggedin(userid, password);
+            boolean isLoggedin = setToLoggedin(email, password);
             if (isLoggedin) {
-                tempUser = this.getUser(userid);
+                tempUser = this.getUser(email);
                 // put the user id into session. This value will be used everywhere.
-                session.setAttribute("username", tempUser.getUsername());
+                session.setAttribute("email", tempUser.getEmail());
                 session.setAttribute("userid", tempUser.getId());
                 // goes to index
                 return "redirect:/getlists";
             } else {
                 signinErrorMsg = "User name and password don't match. Try Again.";
                 model.addAttribute("signinErrorMsg", signinErrorMsg);
-                return "signupSignin";
+                return "index";
             }
         }
     }
 
     @RequestMapping(value = "/processsignup", method = RequestMethod.POST)
-    public String processSignup(@RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("signupPassword") String password, @RequestParam("confPassword") String confPassword, Model model) throws org.json.simple.parser.ParseException, IOException {
-        username = username.trim();
-        email = email.trim();
-
+    public String processSignup(@RequestParam("firstname") String firstname, @RequestParam("lastname") String lastname, @RequestParam("email") String email, @RequestParam("signupPassword") String password, @RequestParam("confPassword") String confPassword, Model model) throws org.json.simple.parser.ParseException, IOException {
         String signupErrorMsg = "";
-        boolean isFilled = !username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confPassword.isEmpty();
-
+        boolean isFilled = !firstname.isEmpty() && !lastname.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confPassword.isEmpty();
         if (!isFilled) {
             signupErrorMsg = "Fill the blanks";
             model.addAttribute("signupErrorMsg", signupErrorMsg);
             return "signup";
         }
-
+        firstname = firstname.trim();
+        firstname = firstname.substring(0, 1).toUpperCase() + firstname.substring(1);
+        lastname = lastname.trim();
+        lastname = lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
+        email = email.trim();
+        boolean isGoodName = this.isGoodName(firstname) && this.isGoodName(lastname);
         boolean isGoodEmail = this.isGoodEmail(email);
-        boolean isGoodUsername = this.isGoodUsername(username);
         boolean isGoodPassword = this.isGoodPassword(password);
         boolean passConfPassMatch = password.equals(confPassword);
 
-        if (isGoodEmail && isGoodUsername && isGoodPassword && passConfPassMatch) {
-            tempUser = new User(username.toLowerCase(), email.toLowerCase(), password);
+        if (isGoodEmail && isGoodPassword && passConfPassMatch) {
+            tempUser = new User(firstname, lastname, email, password);
             userAPI.postUser(tempUser);
+            // have to send a confirmation email.
             return this.showSignupSuccess(tempUser, model);
         } else {
-            if (!isGoodEmail) {
-                signupErrorMsg += "Invalid email or already in use<br>";
+            if (!isGoodName) {
+                signupErrorMsg += "Name has to have at least 2 characters.<br>";
             }
-            if (!isGoodUsername) {
-                signupErrorMsg += "Username already in use<br>";
+            if (!isGoodEmail) {
+                signupErrorMsg += "Invalid email or already in use.<br>";
             }
             if (!isGoodPassword) {
-                signupErrorMsg += "Invalid password<br>";
+                signupErrorMsg += "Invalid password.<br>";
             }
             if (!passConfPassMatch) {
                 signupErrorMsg += "Password and confirm password don't match";
@@ -151,20 +153,30 @@ public class UserController {
         return "signupsuccess";
     }
 
-    private boolean setToLoggedin(String userid, String password) throws org.json.simple.parser.ParseException, IOException {
+    @RequestMapping(value = "/confirmregistration/{userid}", method = RequestMethod.POST)
+    public String confirmRegistration(@PathVariable("userid") String userid, Model model) {
+        tempUser = userStore.getUserForUsername(userid);
+        if (!tempUser.isConfirmed()) {
+            tempUser.setConfirmed(true);
+            userAPI.putUser(tempUser, userid);
+            return this.showSignupSuccess(tempUser, model);
+        } else {
+            return "redirect:/";
+        }
+    }
+
+    private boolean setToLoggedin(String email, String password) throws org.json.simple.parser.ParseException, IOException {
         tempUserList = userStore.getAllUsers();
         Iterator<User> it = tempUserList.iterator();
         boolean emailMatches = false;
-        boolean usernameMatches = false;
         boolean passwordMatches = false;
         boolean loggedin = false;
         while (it.hasNext()) {
             tempUser = it.next();
-            emailMatches = tempUser.getEmail().equalsIgnoreCase(userid);
-            usernameMatches = tempUser.getUsername().equalsIgnoreCase(userid);
+            emailMatches = tempUser.getEmail().equalsIgnoreCase(email);
             passwordMatches = tempUser.getPassword().equals(password);
-            if ((emailMatches || usernameMatches) && passwordMatches) {
-                loggedin = (emailMatches || usernameMatches) && passwordMatches;
+            if (emailMatches && passwordMatches) {
+                loggedin = emailMatches && passwordMatches;
                 break;
             }
         }
@@ -175,7 +187,7 @@ public class UserController {
         Iterator<User> it = tempUserList.iterator();
         while (it.hasNext()) {
             tempUser = it.next();
-            if (tempUser.getUsername().equalsIgnoreCase(userid) || tempUser.getEmail().equalsIgnoreCase(userid)) {
+            if (tempUser.getEmail().equalsIgnoreCase(userid)) {
                 return tempUser;
             }
         }
@@ -187,7 +199,7 @@ public class UserController {
         return matcher.find();
     }
 
-    private boolean isGoodEmail(String email) throws org.json.simple.parser.ParseException, IOException {
+    private boolean isGoodEmail(String email) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
         // also needs to check if the email is in use already.
         tempUserList = userStore.getAllUsers();
@@ -203,19 +215,8 @@ public class UserController {
         return matcher.find() && retVal;
     }
 
-    private boolean isGoodUsername(String username) {
-        Matcher matcher = VALID_USERNAME_REGEX.matcher(username);
-        // also needs to check if the username is in use already.
-        boolean retVal = true;
-        Iterator<User> it = tempUserList.iterator();
-        while (it.hasNext()) {
-            tempUser = it.next();
-            if (tempUser.getUsername().toLowerCase().equals(username.toLowerCase())) {
-                retVal = false;
-                break;
-            }
-        }
-        return matcher.find() && retVal;
+    private boolean isGoodName(String name) {
+        return name.length() > 1;
     }
 
 }
