@@ -29,7 +29,7 @@ public class ToDoListStore {
     String jsonString;
     JSONArray jsonArray;
 
-    public List<ToDoList> getAllToDoLists() throws ParseException, IOException {
+    public List<ToDoList> getAllToDoLists() {
         jsonString = toDoListAPI.getAllToDoLists();
 
         mapper = new ObjectMapper();
@@ -42,16 +42,13 @@ public class ToDoListStore {
                 tempToDoListList.add(tempToDoList);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempToDoList = mapper.readValue(jsonObject.toString(), ToDoList.class);
-            tempToDoListList.add(tempToDoList);
+            System.out.println(ex);
         }
 
         return tempToDoListList;
     }
     
-    public List<ToDoList> getToDoListsForUserid(String userid) throws IOException, ParseException {
+    public List<ToDoList> getToDoListsForUserid(String userid) {
         jsonString = toDoListAPI.getToDoListsByUserid(userid);
 
         mapper = new ObjectMapper();
@@ -64,10 +61,7 @@ public class ToDoListStore {
                 tempToDoListList.add(tempToDoList);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempToDoList = mapper.readValue(jsonObject.toString(), ToDoList.class);
-            tempToDoListList.add(tempToDoList);
+            System.out.println(ex);
         }
 
         return tempToDoListList;

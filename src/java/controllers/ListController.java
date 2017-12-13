@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import models.ToDoList;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 
  * @author Suguru
  */
+@Controller
 public class ListController {
     
     @Autowired
@@ -41,17 +43,17 @@ public class ListController {
     ItemAPI itemAPI;
     
     String useridInSession;
-    List<ToDoList> tempList;
+    List<ToDoList> tempToDoList;
     
-    @RequestMapping(value = "/showlists", method = RequestMethod.GET)
+    @RequestMapping(value = "/getlists", method = RequestMethod.GET)
     public String showLists(Model model, HttpSession session) throws IOException, ParseException {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
         }
         
-        tempList = toDoListStore.getToDoListsForUserid(useridInSession);
-        model.addAttribute("list", tempList);
+        tempToDoList = toDoListStore.getToDoListsForUserid(useridInSession);
+        model.addAttribute("lists", tempToDoList);
         return "viewlist";
     }    
     

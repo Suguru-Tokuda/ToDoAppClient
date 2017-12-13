@@ -52,7 +52,7 @@ public class UserController {
     public String viewIndex(HttpSession session, Model model) {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession != null) {
-            return "redirect:/showlists";
+            return "redirect:/getlists";
         }
         return "index";
     }
@@ -70,7 +70,7 @@ public class UserController {
     public String showSignup(HttpSession session) {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession != null) {
-            return "redirect:/showlists";
+            return "redirect:/getlists";
         } else {
             return "signup";
         }
@@ -80,7 +80,7 @@ public class UserController {
     public String processSignin(@RequestParam("userid") String userid, @RequestParam("signinPassword") String password, Model model, HttpSession session) throws ParseException, IOException, org.json.simple.parser.ParseException {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession != null) {
-            return "redirect:/showlists";
+            return "redirect:/getlists";
         }
         String signinErrorMsg = "";
         boolean isFilled = !userid.isEmpty() && !password.isEmpty();

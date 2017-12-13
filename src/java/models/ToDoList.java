@@ -8,6 +8,7 @@ public class ToDoList {
 
     private String id;
     private String todolistname;
+    private String createdate;
     private boolean active;
 
     public ToDoList() {
@@ -32,20 +33,6 @@ public class ToDoList {
     }
 
     /**
-     * @return the todolistname
-     */
-    public String getToDoListname() {
-        return todolistname;
-    }
-
-    /**
-     * @param listname the todolistname to set
-     */
-    public void setListname(String todolistname) {
-        this.todolistname = todolistname;
-    }
-
-    /**
      * @return the active
      */
     public boolean isActive() {
@@ -57,6 +44,34 @@ public class ToDoList {
      */
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    /**
+     * @return the todolistname
+     */
+    public String getTodolistname() {
+        return todolistname;
+    }
+
+    /**
+     * @param todolistname the todolistname to set
+     */
+    public void setTodolistname(String todolistname) {
+        this.todolistname = todolistname;
+    }
+
+    /**
+     * @return the createdate
+     */
+    public String getCreatedate() {
+        return createdate;
+    }
+
+    /**
+     * @param createdate the createdate to set
+     */
+    public void setCreatedate(String createdate) {
+        this.createdate = createdate;
     }
 
 }
