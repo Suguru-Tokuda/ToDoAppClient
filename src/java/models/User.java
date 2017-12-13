@@ -15,6 +15,7 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private boolean confirmed;
 
     public User() {
     }
@@ -23,6 +24,14 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.confirmed = false;
+    }
+
+    public User(String username, String email, String password, boolean confirmed) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.confirmed = confirmed;
     }
 
     public User(String id, String username, String email, String password) {
@@ -86,6 +95,20 @@ public class User {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @return the confirmed
+     */
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    /**
+     * @param confirmed the confirmed to set
+     */
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
 }
