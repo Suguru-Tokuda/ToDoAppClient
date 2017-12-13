@@ -5,6 +5,20 @@
  */
 package controllers;
 
+import api.ItemAPI;
+import api.ItemStore;
+import api.ToDoListAPI;
+import api.ToDoListStore;
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.http.HttpSession;
+import models.ToDoList;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 /**
  * This controller handles all the list related activities.
  * 3. Create and Add to List
@@ -16,5 +30,30 @@ package controllers;
  * @author Suguru
  */
 public class ListController {
+    
+    @Autowired
+    ToDoListStore toDoListStore;
+    @Autowired
+    ToDoListAPI listAPI;
+    @Autowired
+    ItemStore itemStore;
+    @Autowired
+    ItemAPI itemAPI;
+    
+    String userid;
+    List<ToDoList> tempList;
+    
+    @RequestMapping(value = "/showlists", method = RequestMethod.GET)
+    public String showLists(Model model, HttpSession session) throws IOException, ParseException {
+        userid = (String) session.getAttribute("userid");
+        if (userid == null) {
+            return "redirect:/";
+        }
+        
+        tempList = toDoListStore.getToDoListsForUserid(userid);
+        model.addAttribute("list", tempList);
+        return "viewlist";
+    }
+    
     
 }

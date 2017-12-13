@@ -17,5 +17,15 @@
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
+    <bean class="api.UserStore" id="userStore" scope="singleton" autowire="byName" name="userStore" />
+    <bean class="api.ToDoListStore" id="toDoListStore" scope="singleton" autowire="byName" name="toDoListStore" />
+    <bean class="api.ItemStore" id="itemStore" scope="singleton" autowire="byName" name="itemStore" />
+    <bean class="api.AssignmentStore" id="assignmentStore" scope="singleton" autowire="byName" name="assignmentStore" />
+    <bean class="api.InvitationStore" id="invitationStore" scope="singleton" autowire="byName" name="invitationStore" />
+    <bean class="api.UserAPI" id="userAPI" scope="singleton" autowire="byName" name="userAPI" />
+    <bean class="api.ToDoListAPI" id="toDoListAPI" scope="singleton" autowire="byName" name="todoListAPI" />
+    <bean class="api.ItemAPI" id="itemAPI" scope="singleton" autowire="byName" name="itemAPI" />
+    <bean class="api.AssignmentAPI" id="assigmentAPI" scope="singleton" autowire="byName" name="assignmentAPI" />
+    <bean class="api.InvitationAPI" id="invitationAPI" scope="singleton" autowire="byName" name="invitationAPI" />
 
 </beans>

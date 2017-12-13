@@ -12,7 +12,7 @@ package models;
 public class User {
     
     private String id;
-    private String userName;
+    private String username;
     private String email;
     private String password;
     private String listId;
@@ -20,9 +20,9 @@ public class User {
     public User() {
     }
     
-    public User(String id, String userName, String email, String password, String listId) {
+    public User(String id, String username, String email, String password, String listId) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.listId = listId;
@@ -45,15 +45,15 @@ public class User {
     /**
      * @return the userName
      */
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * @param userName the userName to set
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     /**

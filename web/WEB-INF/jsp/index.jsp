@@ -8,6 +8,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>ToDoApp</title>
         <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css" />">
+        <link rel="stylesheet" href="<c:url value="/resources/css/custom.css" />">
         <script src="<c:url value="/resources/js/jQuery.js" />"></script>
         <script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
     </head>
@@ -28,38 +29,32 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
                         <c:if test="${!empty username}">
-                        <li><a href="${pageContext.request.contextPath}/addDeck">Add a Deck</a></li>
+                        <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
                         </c:if>
                 </ul>
-                <c:choose>
-                    <c:when test="${empty username}">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="${pageContext.request.contextPath}/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                            <li><a href="${pageContext.request.contextPath}/signin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>                
-                        </ul>
-                    </c:when>
-                    <c:otherwise>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Hello, ${username}</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="${pageContext.request.contextPath}/mydecks"><span class="glyphicon glyphicon-folder-open"></span> My Decks</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/profile"><span class="glyphicon glyphicon-book"></span> Profile</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
-                                </ul>
-                        </ul>
-                    </c:otherwise>
-                </c:choose>
             </div>
         </div>
     </nav>
-
     <div style="margin-top: 30px;"></div>
     <main role="main" class="container">
+        <div class="jumbotron">
+            <h1 class="display-3 text-center">To Do List App</h1>
+        </div>
+        <div style="margin-top: 30px;"></div>
+        <div class="col-md-3 col-md-offset-4 col-sm-3 col-sm-offset-4">
+            <h2 class="text-center">Sing in</h2>
+            <div class="form-grup">
+                <div class="form-group">
+                    <label class="control-label">User name or Email:</label>
+                    <input type="text" class="form-control" name="userid" />
+                    <label class="control-label">Password:</label>                <!--</div>-->
+                    <input type="password" class="form-control" name="signinPassword" />
+                    <div style="margin-top: 20px;"></div>
+                    <input type="submit" class="btn btn-primary col-md-offset-4" formaction="${pageContext.request.contextPath}/processsignin" value="Sign in" />
+                </div>
+                <div style="margin-top: 35px;"></div>
+            </div>
+        </div>
     </main>
-    <footer class="container-fluid bg-4 text-center">
-        <p>MyFlashCard.com <a href="https://www.w3schools.com">MyFlashCard.com</a></p> 
-    </footer>
 </body>
 </html>
