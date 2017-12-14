@@ -56,6 +56,7 @@
                 <table class="table table-striped table-bordered">
                     <tr>
                         <th class="col-md-1" style="text-align: center;">#</th>
+                        <th class="col-md-1" style="text-align: center;">Finished</th>
                         <th class="col-md-1" style="text-align: center;">Item</th>
                         <th class="col-md-1" style="text-align: center;">Action</th>
                     </tr>
@@ -63,6 +64,15 @@
                     <c:forEach var="item" items="${itemList}">
                         <tr>
                             <td style="text-align: center;">${count}</td>
+                            <td style="text-align: center;">
+                                <c:choose>
+                                    <c:when test="${item.finished == true}">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </c:when>
+                                    <c:otherwise>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                             <c:choose>
                                 <c:when test="${item.important == true}">
                                     <td style="color: red; font-weight: bold;">${item.itemname}</td>
@@ -95,16 +105,24 @@
                                 <c:otherwise>
                                 </c:otherwise>
                             </c:choose>
-                            type="checkbox" name="important" class="form-check-input" value="${itemToView.important}">
+                            type="checkbox" name="important" class="form-check-input" value="true">
                         Important                            
                     </label>
                     <label class="form-check-label">
-                        <input type="checkbox" name="finished" class="form-check-input" value="${itemToView.important}">
+                        <input 
+                            <c:choose>
+                                <c:when test="${itemToView.finished == true}">     
+                                    checked="true" 
+                                </c:when>
+                                <c:otherwise>
+                                </c:otherwise>
+                            </c:choose>
+                            type="checkbox" name="finished" class="form-check-input" value="true">
                         Finished
                     </label>
                     <div style="margin-top: 30px;"></div>
                     <div style="margin-top: 30px;" ></div>
-                    <input type="submit" class="btn btn-warning" value="Update" formaction="${pageContext.request.contextPath}/update" />
+                    <input type="submit" class="btn btn-warning" value="Update" formaction="${pageContext.request.contextPath}/updateitem" />
                     <input type="submit" class="btn btn-primary" value="Add New" formaction="${pageContext.request.contextPath}/addnewitem" />
                 </div>
             </form>

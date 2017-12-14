@@ -54,12 +54,15 @@
                 <c:when test="${!empty toDoLists}">
                     <div class="col-md-6 col-xs-9">
                         <h2>Create from History</h2>
-                        <div style="margin-top: 55px;"></div>                
+                        <div style="margin-top: 30px;"></div>  
+                        <label class="control-label">History</label>
                         <select class="form-control" id="toDoLists" name="todolistid" >
                             <c:forEach var="toDoList" items="${toDoLists}">
                                 <option value="${toDoList.id}">${toDoList.todolistname}: ${toDoList.createdate}</option>
                             </c:forEach>
                         </select>
+                        <div style="margin-top: 20px;"></div>
+                        <input type="submit" class="btn btn-success" value="Create from History" formaction="${pageContext.request.contextPath}/createfromhistory" />
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -72,9 +75,8 @@
                 <div class="form-group">
                     <label class="control-label">List Name</label>
                     <input class="form-control" type="text" name="todolistname" />
-                    <label style="font-weight: normal;">* Keep it blank if you want to create a list from the history</label>
                     <div style="margin-top: 20px;"></div>
-                    <input type="submit" formaction="${pageContext.request.contextPath}/proceedlistcreation" class="btn btn-primary" value="Proceed" />
+                    <input type="submit" formaction="${pageContext.request.contextPath}/proceedlistcreation" class="btn btn-primary" value="Create New" />
                 </div>
             </div>
         </form>

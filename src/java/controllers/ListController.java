@@ -61,10 +61,9 @@ public class ListController {
         if (useridInSession == null) {
             return "redirect:/";
         }
-        tempToDoList = toDoListStore.getToDoListsForUserid(useridInSession);
+        tempToDoList = toDoListStore.getActiveToDoListsForUserid(useridInSession);
         int index = 0;
         String dateStr = null;
-
         for (int i = 0; i < tempToDoList.size(); i++) {
             tempToDoListVal = tempToDoList.get(i);
             index = tempToDoListVal.getCreatedate().indexOf("T");
@@ -73,7 +72,6 @@ public class ListController {
             tempToDoList.set(i, tempToDoListVal);
         }
         model.addAttribute("lists", tempToDoList);
-        model.addAttribute("itemToView", null);
         return "viewlist";
     }
 
@@ -103,16 +101,45 @@ public class ListController {
         }
     }
 
-    @RequestMapping(value = "/remove/{todolistid}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove/{todolistid}", method = RequestMethod.GET)
     public String removeList(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) throws IOException {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
         } else {
             tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+            String createdateStr = tempToDoListVal.getCreatedate() + "T00:00:00";
             tempToDoListVal.setActive(false);
+            tempToDoListVal.setCreatedate(createdateStr);
             toDoListAPI.putToDoList(tempToDoListVal, todolistid);
             return "redirect:/getlists";
+        }
+    }
+
+    @RequestMapping(value = "/createfromhistory", method = RequestMethod.POST)
+    public String createFromHistory(@RequestParam("todolistid") String todolistid, Model model, HttpSession session) throws IOException {
+        useridInSession = (String) session.getAttribute("userid");
+        if (useridInSession == null) {
+            return "redirect:/";
+        } else {
+            this.todolistid = todolistid;
+            tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+            String createdateStr = tempToDoListVal.getCreatedate() + "T00:00:00";
+            tempToDoListVal.setActive(true);
+            tempToDoListVal.setCreatedate(createdateStr);
+            toDoListAPI.putToDoList(tempToDoListVal, todolistid);
+            tempItemList = itemStore.getItemsByToDoListId(todolistid);
+            for (int i = 0; i < tempItemList.size(); i++) {
+                tempItem = tempItemList.get(i);
+                tempItem.setFinished(false);
+                tempItem.setImportant(false);
+                tempItem.setDue(tempItem.getDue() + "T00:00:00");
+                tempItemList.set(i, tempItem);
+                itemAPI.putItem(tempItem, tempItem.getId());
+            }
+            model.addAttribute("itemList", tempItemList);
+            model.addAttribute("toDoList", tempToDoListVal);
+            return "listdetails";
         }
     }
 
@@ -131,7 +158,6 @@ public class ListController {
                 itemname = itemname.trim();
                 due = due + "T00:00:00";
                 itemAPI.postItem(new Item(todolistid, itemname, due, important, false));
-                tempItemList = itemStore.getItemsByToDoListId(todolistid);
                 tempItemList = itemStore.getItemsByToDoListId(todolistid);
                 Collections.sort(tempItemList, (o1, o2) -> {
                     boolean v1 = ((Item) o1).isImportant();
@@ -166,6 +192,17 @@ public class ListController {
                     break;
                 }
             }
+            Collections.sort(tempItemList, (o1, o2) -> {
+                boolean v1 = ((Item) o1).isImportant();
+                boolean v2 = ((Item) o2).isImportant();
+                if (v1 && v2) {
+                    return 0;
+                } else if (v1 && !v2) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
             model.addAttribute("itemList", tempItemList);
             model.addAttribute("itemToView", tempItem);
             model.addAttribute("toDoList", tempToDoListVal);
@@ -174,7 +211,7 @@ public class ListController {
     }
 
     @RequestMapping(value = "/updateitem", method = RequestMethod.POST)
-    public String updateItem(@RequestParam("itemid") String itemid, @RequestParam("itemname") String itemname, @RequestParam("due") String newdue, @RequestParam("finished") boolean finished, Model model, HttpSession session) {
+    public String updateItem(@RequestParam("itemname") String itemname, @RequestParam("due") String newdue, @RequestParam(value = "important", required = false) boolean important, @RequestParam(value = "finished", required = false) boolean finished, Model model, HttpSession session) {
         String errorMsg = "";
         String notificationMsg = "";
         useridInSession = (String) session.getAttribute("userid");
@@ -192,13 +229,38 @@ public class ListController {
                         tempItem = tempItemList.get(i);
                         tempItem.setDue(newdue + "T00:00:00");
                         tempItem.setFinished(finished);
+                        tempItem.setImportant(important);
                         tempItem.setItemname(itemname);
                         tempItemList.set(i, tempItem);
-                        itemAPI.putItem(tempItem, itemid);
+                        itemAPI.putItem(tempItem, tempItem.getId());
                         break;
                     }
                 }
+                int index = 0;
+                String dateStr = null;
+                for (int i = 0; i < tempItemList.size(); i++) {
+                    tempItem = tempItemList.get(i);
+                    index = tempItem.getDue().indexOf("T");
+                    if (index != -1) {
+                        dateStr = tempItem.getDue().substring(0, index);
+                        tempItem.setDue(dateStr);
+                        tempItemList.set(i, tempItem);
+                    }
+                }
+                Collections.sort(tempItemList, (o1, o2) -> {
+                    boolean v1 = ((Item) o1).isImportant();
+                    boolean v2 = ((Item) o2).isImportant();
+                    if (v1 && v2) {
+                        return 0;
+                    } else if (v1 && !v2) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
                 model.addAttribute("itemList", tempItemList);
+                model.addAttribute("itemToView", tempItem);
+                model.addAttribute("toDoList", tempToDoListVal);
                 notificationMsg = "Item updated";
                 model.addAttribute("notificationMsg", notificationMsg);
                 return "listdetails";

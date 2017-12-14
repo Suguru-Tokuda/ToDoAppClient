@@ -60,20 +60,21 @@
                         <th class="col-md-4" style="text-align: center;">Name</th>
                         <th class="col-md-1" style="text-align: center;">Date Made</th>
                         <th class="col-md-1" style="text-align: center;">View</th>
-                        <th class="col-md-1" style="text-align: center;">Delete</th>
+                        <th class="col-md-1" style="text-align: center;">Invite</th>
+                        <th class="col-md-1" style="text-align: center;">Remove</th>
                     </tr>
                     <c:forEach var="list" items="${lists}">
                         <tr>
                             <td>${list.todolistname}</td>
                             <td>${list.createdate}</td>
                             <td style="text-align: center;"><input type="submit" formaction="${pageContext.request.contextPath}/getlistdetails/${list.id}" class="btn btn-primary btn-sm" style="width: 70px;" value="View" /></td>
-                            <td style="text-align: center;"><input class="btn btn-danger btn-sm" style="width: 70px;" value="Remove"</td>
+                            <td style="text-align: center;"><input type="submit" formaction="${pageContext.request.contextPath}/invite/${list.id}" class="btn btn-success btn-sm" style="width: 70px;" value="Invite" /></td>
+                            <td style="text-align: center;"><input type="submit" formaction="${pageContext.request.contextPath}/remove/${list.id}" class="btn btn-danger btn-sm" style="width: 70px;" value="Remove"</td>
                         </tr>
                     </c:forEach>
                 </table>
             </form>
         </div>
-        <!--</div>-->
     </main>
 </body>
 </html>

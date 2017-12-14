@@ -80,6 +80,16 @@ public class ToDoListAPI {
                 .get(String.class);
         return response;
     }
+    
+        public String getActiveToDoListsByUserid(String userid) {
+        Client client = ClientBuilder.newClient();
+        String requestURL = BASE_URL + "getActiveToDoListsByUserid/" + userid;
+        String response = client
+                .target(requestURL)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        return response;
+    }
 
     public String getToDoListsOrderByIdDesc() {
         Client client = ClientBuilder.newClient();
