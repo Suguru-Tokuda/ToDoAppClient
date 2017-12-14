@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Suguru
  */
 public class ToDoListStore {
-    
+
     private List<ToDoList> tempToDoListList;
     private ToDoList tempToDoList;
     @Autowired
@@ -47,7 +47,7 @@ public class ToDoListStore {
 
         return tempToDoListList;
     }
-    
+
     public List<ToDoList> getToDoListsForUserid(String userid) {
         jsonString = toDoListAPI.getToDoListsByUserid(userid);
 
@@ -67,6 +67,57 @@ public class ToDoListStore {
         return tempToDoListList;
     }
 
+    public List<ToDoList> getInactiveToDoListsForUserid(String userid) {
+        jsonString = toDoListAPI.getInactiveToDoListsByUserid(userid);
 
+        mapper = new ObjectMapper();
+        tempToDoList = null;
+        tempToDoListList = new ArrayList<>();
+        try {
+            jsonArray = (JSONArray) jParser.parse(jsonString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                tempToDoList = mapper.readValue(jsonArray.get(i).toString(), ToDoList.class);
+                tempToDoListList.add(tempToDoList);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return tempToDoListList;
+    }
+
+    public List<ToDoList> getToDoListsOrderByIdDesc() {
+        jsonString = toDoListAPI.getToDoListsOrderByIdDesc();
+
+        mapper = new ObjectMapper();
+        tempToDoList = null;
+        tempToDoListList = new ArrayList<>();
+        try {
+            jsonArray = (JSONArray) jParser.parse(jsonString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                tempToDoList = mapper.readValue(jsonArray.get(i).toString(), ToDoList.class);
+                tempToDoListList.add(tempToDoList);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return tempToDoListList;
+    }
     
+    public ToDoList getToDoListById(String todolistid) {
+        jsonString = toDoListAPI.getToDoListById(todolistid);
+        mapper = new ObjectMapper();
+        tempToDoList = null;
+        tempToDoListList = new ArrayList<>();
+        try {
+            jsonArray = (JSONArray) jParser.parse(jsonString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                tempToDoList = mapper.readValue(jsonArray.get(i).toString(), ToDoList.class);
+                tempToDoListList.add(tempToDoList);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return tempToDoListList.get(0);
+    }
+
 }

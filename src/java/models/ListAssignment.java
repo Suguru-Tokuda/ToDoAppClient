@@ -18,9 +18,9 @@ public class ListAssignment {
     public ListAssignment() {
     }
 
-    public ListAssignment(String userid, String listid) {
+    public ListAssignment(String userid, String todolistid) {
         this.userid = userid;
-        this.todolistid = listid;
+        this.todolistid = todolistid;
     }
 
     /**
@@ -54,15 +54,17 @@ public class ListAssignment {
     /**
      * @return the todolistid
      */
-    public String getToDoListId() {
+    public String getTodolistid() {
         return todolistid;
     }
 
     /**
-     * @param listid the listid to set
+     * @param todolistid the todolistid to set
      */
-    public void setToDoListId(String todolistid) {
+    public void setTodolistid(String todolistid) {
         this.todolistid = todolistid;
     }
+
+
 
 }

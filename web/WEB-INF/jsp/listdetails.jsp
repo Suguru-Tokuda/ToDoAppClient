@@ -46,38 +46,53 @@
                 </c:if>
             </div>
         </div>
-    </nav>
-    <div style="margin-top: 35px;"></div>
+    </nav>               
+    <div style="margin-top: 30px;"></div>
     <main role="main" class="container">
-        <form method="post">
-            <c:choose>
-                <c:when test="${!empty toDoLists}">
-                    <div class="col-md-6 col-xs-9">
-                        <h2>Create from History</h2>
-                        <div style="margin-top: 55px;"></div>                
-                        <select class="form-control" id="toDoLists" name="todolistid" >
-                            <c:forEach var="toDoList" items="${toDoLists}">
-                                <option value="${toDoList.id}">${toDoList.todolistname}: ${toDoList.createdate}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <input type="hidden" name="todolistid" value="0"/>
-                </c:otherwise>
-            </c:choose>
-            <div class="col-md-3 col-xs-8">
-                <h2>Create New List</h2>
-                <div style="margin-top: 35px;"></div>
-                <div class="form-group">
-                    <label class="control-label">List Name</label>
-                    <input class="form-control" type="text" name="todolistname" />
-                    <label style="font-weight: normal;">* Keep it blank if you want to create a list from the history</label>
-                    <div style="margin-top: 20px;"></div>
-                    <input type="submit" formaction="${pageContext.request.contextPath}/proceedlistcreation" class="btn btn-primary" value="Proceed" />
+        <div class="jumbotron">
+            <h1 class="display-3 text-center">To Do List App</h1>
+        </div>
+        <div style="margin-top: 30px;"></div>
+        <div class="col-md-6">
+            <form method="post">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th class="col-md-4" style="text-align: center;">#</th>
+                        <th class="col-md-4" style="text-align: center;">Finished</th>
+                        <th class="col-md-1" style="text-align: center;">Item</th>
+                        <th class="col-md-1" style="text-align: center;">View</th>
+                    </tr>
+                    <c:set var="count" value="0" scope="page" />
+                    <c:forEach var="item" items="${itemList}">
+                        <tr>
+                            <td>${count}</td>
+                            <td><input type="checkbox" value="${item.finished}" name="finished" /></td>
+                            <td>${item.name}</td>
+                            <td style="text-align: center;"><input class="btn btn-primary btn-sm" style="width: 70px;" value="View" formaction="${pageContext.request.contextPath}/viewitem" /></td>
+                        </tr>
+                        <c:set var="count" value="${count+1}" scope="page" />
+                    </c:forEach>
+                </table>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form method="post">
+                <div class="form-grup">
+                    <label class="control-label">Item</label>
+                    <input type="text" class="form-control" name="itemname" />
+                    <label class="control-label">Due</label>
+                    <input type="text" class="form-control" name="due" placeholder="YYYY-MM-DD" />
+                    <label class="form-check-label">
+                        <input type="checkbox" name="important" class="form-check-input">
+                        Important
+                    </label>
+                    <div style="margin-top: 30px;"></div>
+                    <div style="margin-top: 30px;" ></div>
+                    <input type="submit" class="btn btn-warning" value="Update" formaction="${pageContext.request.contextPath}/update" />
+                    <input type="submit" class="btn btn-primary" value="Add New" formaction="${pageContext.request.contextPath}/addnewitem" />
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </main>
 </body>
 </html>

@@ -12,10 +12,10 @@ public class Item {
     private String due;
     private boolean important;
     private boolean finished;
-    
+
     public Item() {
     }
-    
+
     public Item(String todolistid, String itemname, String due, boolean important, boolean finished) {
         this.todolistid = todolistid;
         this.itemname = itemname;
@@ -41,14 +41,14 @@ public class Item {
     /**
      * @return the todolistid
      */
-    public String getToDoListid() {
+    public String getTodolistid() {
         return todolistid;
     }
 
     /**
      * @param todolistid the todolistid to set
      */
-    public void setToDoListid(String todolistid) {
+    public void setTodolistid(String todolistid) {
         this.todolistid = todolistid;
     }
 
@@ -67,17 +67,17 @@ public class Item {
     }
 
     /**
-     * @return the date
+     * @return the due
      */
-    public String getDate() {
+    public String getDue() {
         return due;
     }
 
     /**
-     * @param date the date to set
+     * @param due the due to set
      */
-    public void setDate(String date) {
-        this.due = date;
+    public void setDue(String due) {
+        this.due = due;
     }
 
     /**
@@ -107,7 +107,5 @@ public class Item {
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
-    
-    
 
 }

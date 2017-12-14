@@ -12,31 +12,30 @@ import models.ListAssignment;
  */
 public class ListAssignmentAPI {
     
-    private static String BASE_URL = "http://gfish3.it.ilstu.edu:8080/stokuda_fall2017_ToDoAppWS/webresources/entities.assignments/";
+    private static String BASE_URL = "http://gfish3.it.ilstu.edu:8080/stokuda_fall2017_ToDoAppWS/webresources/entities.listassignments/";
     
     public static String getBASE_URL() {
         return BASE_URL;
     }
     
-    public boolean postAssignment(ListAssignment assignment) {
+    public boolean postAssignment(ListAssignment listAssignment) {
         Client client = ClientBuilder.newClient();
-        
         String response = client
                 .target(BASE_URL)
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.TEXT_PLAIN_TYPE)
-                .post(Entity.json(assignment), String.class);
+                .post(Entity.json(listAssignment), String.class);
         return true;
     }
     
-    public boolean putAssignment(ListAssignment assignment, String id) {
+    public boolean putAssignment(ListAssignment listAssignment, String id) {
         Client client = ClientBuilder.newClient();
         String putURL = BASE_URL + id;
         String response = client
                .target(putURL)
                .request(MediaType.APPLICATION_JSON)
                .accept(MediaType.TEXT_PLAIN_TYPE)
-                .put(Entity.json(assignment), String.class);
+               .put(Entity.json(listAssignment), String.class);
         return true;
     }
     

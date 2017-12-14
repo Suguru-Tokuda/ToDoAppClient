@@ -29,7 +29,7 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
                         <c:if test="${!empty userid}">
-                        <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
+                        <li><a href="${pageContext.request.contextPath}/createlist">Create a List</a></li>
                         </c:if>
                 </ul>
                 <c:if test="${!empty userid}">

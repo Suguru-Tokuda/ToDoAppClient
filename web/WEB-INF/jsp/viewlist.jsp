@@ -29,7 +29,7 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
                         <c:if test="${!empty userid}">
-                        <li><a href="${pageContext.request.contextPath}/addList">Create a List</a></li>
+                        <li><a href="${pageContext.request.contextPath}/createlist">Create a List</a></li>
                         </c:if>
                 </ul>
                 <c:if test="${!empty userid}">
@@ -53,10 +53,8 @@
             <h1 class="display-3 text-center">To Do List App</h1>
         </div>
         <div style="margin-top: 30px;"></div>
-        <!--<div class="col-md-12 col-sm-3 col-sm-offset-4">-->
-        <!--<h2 class="text-center"></h2>-->
-        <div class="form-grup">
-            <form method="post">
+       <div class="form-grup">
+            <form method="get">
                 <table class="table table-striped table-bordered">
                     <tr>
                         <th class="col-md-4" style="text-align: center;">Name</th>
@@ -68,8 +66,8 @@
                         <tr>
                             <td>${list.todolistname}</td>
                             <td>${list.createdate}</td>
-                            <td style="text-align: center;"><input class="btn btn-primary btn-sm" style="width: 70px;" value="View" /></td>
-                            <td style="text-align: center;"><input class="btn btn-danger btn-sm" style="width: 70px;" value="Delete"</td>
+                            <td style="text-align: center;"><input type="submit" formaction="${pageContext.request.contextPath}/getlistdetails/${list.id}" class="btn btn-primary btn-sm" style="width: 70px;" value="View" /></td>
+                            <td style="text-align: center;"><input class="btn btn-danger btn-sm" style="width: 70px;" value="Remove"</td>
                         </tr>
                     </c:forEach>
                 </table>

@@ -14,8 +14,14 @@ public class ToDoList {
     public ToDoList() {
     }
 
-    public ToDoList(String listname, boolean active) {
-        this.todolistname = listname;
+    public ToDoList(String todolistname, boolean active) {
+        this.todolistname = todolistname;
+    }
+    
+    public ToDoList(String todolistname, String createdate, boolean active) {
+        this.todolistname = todolistname;
+        this.createdate = createdate;
+        this.active = active;
     }
 
     /**

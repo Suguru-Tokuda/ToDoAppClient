@@ -28,7 +28,7 @@ public class ItemStore {
     String jsonString;
     JSONArray jsonArray;
 
-    public List<Item> getAllitems() throws ParseException, IOException {
+    public List<Item> getAllitems() {
         jsonString = itemAPI.getAllItems();
 
         mapper = new ObjectMapper();
@@ -41,30 +41,29 @@ public class ItemStore {
                 tempItemList.add(tempItem);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempItem = mapper.readValue(jsonObject.toString(), Item.class);
-            tempItemList.add(tempItem);
+            System.out.println(ex);
         }
         return tempItemList;
     }
     
-    public List<Item> getItemsByToDoListId(String toDoListId) throws IOException, ParseException {
+    public List<Item> getItemsByToDoListId(String toDoListId) {
         jsonString = itemAPI.getItemsByToDoListId(toDoListId);
         mapper = new ObjectMapper();
         tempItem = null;
         tempItemList = new ArrayList<>();
+        int index = 0;
+        String dueStr = null;
         try {
             jsonArray = (JSONArray) jParser.parse(jsonString);
             for (int i = 0; i < jsonArray.size(); i++) {
                 tempItem = mapper.readValue(jsonArray.get(i).toString(), Item.class);
+                index = tempItem.getDue().indexOf("T");
+                dueStr = tempItem.getDue().substring(0, index);
+                tempItem.setDue(dueStr);
                 tempItemList.add(tempItem);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempItem = mapper.readValue(jsonObject.toString(), Item.class);
-            tempItemList.add(tempItem);
+            System.out.println(ex);
         }
         return tempItemList;
     }
