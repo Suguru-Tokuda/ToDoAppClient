@@ -103,7 +103,7 @@ public class ToDoListAPI {
 
     public String getToDoListById(String todolistid) {
         Client client = ClientBuilder.newClient();
-        String requestURL = BASE_URL + todolistid;
+        String requestURL = BASE_URL + "getToDoListById/" + todolistid;
         String response = client
                 .target(requestURL)
                 .request(MediaType.APPLICATION_JSON)

@@ -49,19 +49,8 @@
     </nav>
     <div style="margin-top: 30px;"></div>
     <main role="main" class="container">
-        <div class="col-md-4">
-            <h2>Send Invitation</h2>
-            <h3>List name: ${toDoList.todolistname}</h3>
-            <div class="form-group">
-                <form method="post">
-                    <label class="control-label">Receiver's Email</label>
-                    <input class="form-control" type="text" name="receiverEmail" />
-                    <input type="hidden" name="todolistid" value="${toDoList.id}" />
-                    <div style="margin-top: 30px;"></div>
-                    <input type="submit" class="btn btn-success" value="Invite" formaction="${pageContext.request.contextPath}/sendinvitation" />
-                </form>
-            </div>
-        </div>
+        <h1>Invitation email has been sent</h1>
+        <p>An email has been sent to ${receiver.email}.</p>
     </main>
 </body>
 </html>

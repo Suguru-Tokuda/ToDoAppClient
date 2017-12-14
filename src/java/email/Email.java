@@ -94,7 +94,7 @@ public class Email {
                     + "<p>Dear " + user.getFirstname() + ",</p>\n"
                     + "<p>Thanks for sign up. You have another step before starting using the app. "
                     + "Please confirm sign up from the link below:</p><br>"
-                    + "<a href=\"http://localhost:8080/ToDoAppClient/confirmsignup/\"" + user.getId() + "\">http://localhost:8080/ToDoAppClient/confirmsignup/" + user.getId() + "</a><br>\n"
+                    + "<a href=\"http://localhost:8080/ToDoAppClient/confirmregistration/" + user.getId() + "\">http://localhost:8080/ToDoAppClient/confirmregistration/" + user.getId() + "</a><br>\n"
                     + "<p>Regards,<br> Suguru Tokuda</p>\n"
                     + "</body>\n"
                     + "<html>\n";

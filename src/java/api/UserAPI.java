@@ -61,13 +61,25 @@ public class UserAPI {
         return response;
     }
     
-    public String getUserForEmail(String email) {
+    public String getUserByEmail(String email) {
         Client client = ClientBuilder.newClient();
-        String requestURL = BASE_URL + "findByEmail/" + email;
+        String requestURL = BASE_URL + "getUserByEmail/" + email;
         String response = client
                 .target(requestURL)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
         return response;
     }
+    
+        public String getUserById(String userid) {
+        Client client = ClientBuilder.newClient();
+        String requestURL = BASE_URL + "getUserById/" + userid;
+        String response = client
+                .target(requestURL)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        return response;
+    }
+    
+    
 }

@@ -47,9 +47,8 @@ public class UserStore {
         return tempUserList;
     }
 
-    public User getUserForUsername(String username) {
-        jsonString = userAPI.getAllUsers();
-
+    public User getUserByEmail(String email) {
+        jsonString = userAPI.getUserByEmail(email);
         mapper = new ObjectMapper();
         tempUser = null;
         tempUserList = new ArrayList<>();
@@ -64,5 +63,23 @@ public class UserStore {
         }
         return tempUserList.get(0);
     }
+    
+        public User getUserById(String userid) {
+        jsonString = userAPI.getUserById(userid);
+        mapper = new ObjectMapper();
+        tempUser = null;
+        tempUserList = new ArrayList<>();
+        try {
+            jsonArray = (JSONArray) jParser.parse(jsonString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                tempUser = mapper.readValue(jsonArray.get(i).toString(), User.class);
+                tempUserList.add(tempUser);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return tempUserList.get(0);
+    }
+    
 
 }

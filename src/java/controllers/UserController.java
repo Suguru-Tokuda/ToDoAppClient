@@ -5,6 +5,10 @@
  */
 package controllers;
 
+import api.InvitationAPI;
+import api.InvitationStore;
+import api.ListAssignmentAPI;
+import api.ToDoListStore;
 import api.UserAPI;
 import api.UserStore;
 import email.Email;
@@ -15,6 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpSession;
+import models.Invitation;
+import models.Item;
+import models.ToDoList;
 import models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +46,18 @@ public class UserController {
     UserAPI userAPI;
     @Autowired
     Email emailSender;
+    String useridInSession;
+    @Autowired
+    ToDoListStore toDoListStore;
+    @Autowired
+    InvitationAPI invitationAPI;
+    @Autowired
+    InvitationStore invitationStore;
+    ToDoList tempToDoListVal;
+    List<Item> tempItemList;
+    String itemid;
+    String todolistid;
+    Invitation tempInvitation;
 
     // referred from: https://stackoverflow.com/questions/8204680/java-regex-email
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -131,6 +150,7 @@ public class UserController {
         if (isGoodEmail && isGoodPassword && passConfPassMatch) {
             tempUser = new User(firstname, lastname, email, password);
             userAPI.postUser(tempUser);
+            tempUser = userStore.getUserByEmail(email);
             // have to send a confirmation email.
             if (emailSender.sendConfirmationEmail(tempUser)) {
                 model.addAttribute("user", tempUser);
@@ -162,9 +182,9 @@ public class UserController {
         return "signupsuccess";
     }
 
-    @RequestMapping(value = "/confirmregistration/{userid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/confirmregistration/{userid}", method = RequestMethod.GET)
     public String confirmRegistration(@PathVariable("userid") String userid, Model model) {
-        tempUser = userStore.getUserForUsername(userid);
+        tempUser = userStore.getUserById(userid);
         if (!tempUser.isConfirmed()) {
             tempUser.setConfirmed(true);
             userAPI.putUser(tempUser, userid);
@@ -234,6 +254,35 @@ public class UserController {
 
     private boolean isGoodName(String name) {
         return name.length() > 1;
+    }
+
+    @RequestMapping(value = "/invite/{todolistid}", method = RequestMethod.GET)
+    public String showInvitationPage(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) {
+        useridInSession = (String) session.getAttribute("userid");
+        if (useridInSession == null) {
+            return "redirect:/";
+        } else {
+            tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+            this.todolistid = tempToDoListVal.getId();
+            model.addAttribute("toDoList", tempToDoListVal);
+            return "invite";
+        }
+    }
+
+    @RequestMapping(value = "/sendinvitation", method = RequestMethod.POST)
+    public String sendInvitation(@RequestParam("receiverEmail") String receiverEmail, @RequestParam("todolistid") String todolistid, Model model, HttpSession session) {
+        useridInSession = (String) session.getAttribute("userid");
+        if (useridInSession == null) {
+            return "redirect:/";
+        } else {
+            tempUser = userStore.getUserById(useridInSession);
+            User receiver = userStore.getUserByEmail(receiverEmail);
+            tempInvitation = new Invitation(tempUser.getId(), receiverEmail, todolistid);
+            invitationAPI.postInvitation(tempInvitation);
+            emailSender.sendInvitationEmail(tempUser, receiver, tempToDoListVal);
+            model.addAttribute("receiver", receiver);
+            return "invitationsentconfirm";
+        }
     }
 
 }

@@ -50,7 +50,7 @@
     <div style="margin-top: 30px;"></div>
     <main role="main" class="container">
         <h1>Confirm email has been sent</h1>
-        <p>An email has been sent to ${user.email} Please check your email and confirm to finish sign up.</p>
+        <p>An email has been sent to ${user.email}. Please check your email and confirm to finish sign up.</p>
     </main>
 </body>
 </html>

@@ -119,7 +119,7 @@ public class ToDoListStore {
         return tempToDoListList;
     }
 
-    public ToDoList getToDoListById(String todolistid) throws IOException {
+    public ToDoList getToDoListById(String todolistid) {
         jsonString = toDoListAPI.getToDoListById(todolistid);
         mapper = new ObjectMapper();
         tempToDoList = null;
@@ -130,7 +130,6 @@ public class ToDoListStore {
             jsonArray = (JSONArray) jParser.parse(jsonString);
             for (int i = 0; i < jsonArray.size(); i++) {
                 tempToDoList = mapper.readValue(jsonArray.get(i).toString(), ToDoList.class);
-                tempToDoListList.add(tempToDoList);
                 index = tempToDoList.getCreatedate().indexOf("T");
                 dateStr = tempToDoList.getCreatedate().substring(0, index);
                 tempToDoList.setCreatedate(dateStr);
@@ -138,12 +137,6 @@ public class ToDoListStore {
             }
         } catch (Exception ex) {
             System.out.println(ex);
-            tempToDoList = mapper.readValue(jsonString, ToDoList.class);
-            tempToDoListList.add(tempToDoList);
-            index = tempToDoList.getCreatedate().indexOf("T");
-            dateStr = tempToDoList.getCreatedate().substring(0, index);
-            tempToDoList.setCreatedate(dateStr);
-            tempToDoListList.add(tempToDoList);
         }
         return tempToDoListList.get(0);
     }
