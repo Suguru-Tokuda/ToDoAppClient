@@ -11,7 +11,6 @@ import api.ListAssignmentAPI;
 import api.ToDoListAPI;
 import api.ToDoListStore;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -50,10 +49,10 @@ public class ListController {
     ListAssignmentAPI listAssignmentAPI;
     String useridInSession;
     List<ToDoList> tempToDoList;
-    ToDoList tempVal;
+    ToDoList tempToDoListVal;
     List<Item> tempItemList;
     Item tempItem;
-
+    String itemid;
     String todolistid;
 
     @RequestMapping(value = "/getlists", method = RequestMethod.GET)
@@ -67,13 +66,14 @@ public class ListController {
         String dateStr = null;
 
         for (int i = 0; i < tempToDoList.size(); i++) {
-            tempVal = tempToDoList.get(i);
-            index = tempVal.getCreatedate().indexOf("T");
-            dateStr = tempVal.getCreatedate().substring(0, index);
-            tempVal.setCreatedate(dateStr);
-            tempToDoList.set(i, tempVal);
+            tempToDoListVal = tempToDoList.get(i);
+            index = tempToDoListVal.getCreatedate().indexOf("T");
+            dateStr = tempToDoListVal.getCreatedate().substring(0, index);
+            tempToDoListVal.setCreatedate(dateStr);
+            tempToDoList.set(i, tempToDoListVal);
         }
         model.addAttribute("lists", tempToDoList);
+        model.addAttribute("itemToView", null);
         return "viewlist";
     }
 
@@ -96,8 +96,8 @@ public class ListController {
                     return 1;
                 }
             });
-            tempVal = toDoListStore.getToDoListById(todolistid);
-            model.addAttribute("toDoList", tempVal);
+            tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+            model.addAttribute("toDoList", tempToDoListVal);
             model.addAttribute("itemList", tempItemList);
             return "listdetails";
         }
@@ -109,40 +109,55 @@ public class ListController {
         if (useridInSession == null) {
             return "redirect:/";
         } else {
-            tempVal = toDoListStore.getToDoListById(todolistid);
-            tempVal.setActive(false);
-            toDoListAPI.putToDoList(tempVal, todolistid);
+            tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+            tempToDoListVal.setActive(false);
+            toDoListAPI.putToDoList(tempToDoListVal, todolistid);
             return "redirect:/getlists";
         }
     }
 
     @RequestMapping(value = "/addnewitem", method = RequestMethod.POST)
-    public String addNewItem(@RequestParam("itemname") String itemname, @RequestParam("date") String date, @RequestParam("important") boolean important, Model model, HttpSession session) {
+    public String addNewItem(@RequestParam("itemname") String itemname, @RequestParam("due") String due, @RequestParam("important") boolean important, Model model, HttpSession session) {
         String errorMsg = "";
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
         } else {
-            if (itemname.isEmpty() && date.isEmpty()) {
+            if (itemname.isEmpty() && due.isEmpty()) {
                 errorMsg = "Fill blank";
                 model.addAttribute("errorMsg", errorMsg);
                 return "listdetails";
             } else {
                 itemname = itemname.trim();
-                itemAPI.postItem(new Item(todolistid, itemname, date, important, false));
+                due = due + "T00:00:00";
+                itemAPI.postItem(new Item(todolistid, itemname, due, important, false));
                 tempItemList = itemStore.getItemsByToDoListId(todolistid);
+                tempItemList = itemStore.getItemsByToDoListId(todolistid);
+                Collections.sort(tempItemList, (o1, o2) -> {
+                    boolean v1 = ((Item) o1).isImportant();
+                    boolean v2 = ((Item) o2).isImportant();
+                    if (v1 && v2) {
+                        return 0;
+                    } else if (v1 && !v2) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
+                model.addAttribute("toDoList", tempToDoListVal);
                 model.addAttribute("itemList", tempItemList);
                 return "listdetails";
             }
         }
     }
 
-    @RequestMapping(value = "/viewitem/{itemid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/viewitem/{itemid}", method = RequestMethod.GET)
     public String viewItem(@PathVariable("itemid") String itemid, Model model, HttpSession session) {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
         } else {
+            this.itemid = itemid;
             tempItemList = itemStore.getItemsByToDoListId(todolistid);
             Iterator<Item> it = tempItemList.iterator();
             while (it.hasNext()) {
@@ -151,7 +166,9 @@ public class ListController {
                     break;
                 }
             }
+            model.addAttribute("itemList", tempItemList);
             model.addAttribute("itemToView", tempItem);
+            model.addAttribute("toDoList", tempToDoListVal);
             return "listdetails";
         }
     }
@@ -173,7 +190,7 @@ public class ListController {
                 for (int i = 0; i < tempItemList.size(); i++) {
                     if (tempItemList.get(i).getId().equals(itemid)) {
                         tempItem = tempItemList.get(i);
-                        tempItem.setDue(newdue);
+                        tempItem.setDue(newdue + "T00:00:00");
                         tempItem.setFinished(finished);
                         tempItem.setItemname(itemname);
                         tempItemList.set(i, tempItem);
@@ -200,11 +217,11 @@ public class ListController {
                 int index = 0;
                 String dateStr = null;
                 for (int i = 0; i < tempToDoList.size(); i++) {
-                    tempVal = tempToDoList.get(i);
-                    index = tempVal.getCreatedate().indexOf("T");
-                    dateStr = tempVal.getCreatedate().substring(0, index);
-                    tempVal.setCreatedate(dateStr);
-                    tempToDoList.set(i, tempVal);
+                    tempToDoListVal = tempToDoList.get(i);
+                    index = tempToDoListVal.getCreatedate().indexOf("T");
+                    dateStr = tempToDoListVal.getCreatedate().substring(0, index);
+                    tempToDoListVal.setCreatedate(dateStr);
+                    tempToDoList.set(i, tempToDoListVal);
 
                 }
                 model.addAttribute("toDoLists", tempToDoList);
@@ -223,10 +240,10 @@ public class ListController {
                 tempToDoList = toDoListStore.getInactiveToDoListsForUserid(useridInSession);
                 Iterator<ToDoList> it = tempToDoList.iterator();
                 while (it.hasNext()) {
-                    tempVal = it.next();
-                    if (tempVal.getId().equals(todolistid)) {
-                        tempVal.setActive(true);
-                        toDoListAPI.putToDoList(tempVal, todolistid);
+                    tempToDoListVal = it.next();
+                    if (tempToDoListVal.getId().equals(todolistid)) {
+                        tempToDoListVal.setActive(true);
+                        toDoListAPI.putToDoList(tempToDoListVal, todolistid);
                     }
                 }
                 return "redirect:/getlists";
@@ -236,12 +253,13 @@ public class ListController {
                 int date = now.get(Calendar.DATE);
                 int year = now.get(Calendar.YEAR);
                 String dateStr = year + "-" + month + "-" + date + "T00:00:00";
-                tempVal = new ToDoList(todolistname, dateStr, true);
-                toDoListAPI.postToDoList(new ToDoList(todolistname, dateStr, true));
+                tempToDoListVal = new ToDoList(todolistname, dateStr, true);
+                toDoListAPI.postToDoList(tempToDoListVal);
                 // need to get the toDoList which is just created
-                tempVal = toDoListStore.getToDoListsOrderByIdDesc().get(0);
+                tempToDoListVal = toDoListStore.getToDoListsOrderByIdDesc().get(0);
                 // create a new ListAssignment object and post it.
-                listAssignmentAPI.postAssignment(new ListAssignment(useridInSession, tempVal.getId()));
+                ListAssignment tempAssignment = new ListAssignment(useridInSession, tempToDoListVal.getId());
+                listAssignmentAPI.postListAssignment(tempAssignment);
                 // go back to listview.
                 return "redirect:/getlists";
             }

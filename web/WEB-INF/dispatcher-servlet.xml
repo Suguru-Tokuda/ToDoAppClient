@@ -20,6 +20,7 @@
     <bean class="api.UserStore" id="userStore" scope="singleton" autowire="byName" name="userStore" />
     <bean class="api.ToDoListStore" id="toDoListStore" scope="singleton" autowire="byName" name="toDoListStore" />
     <bean class="api.ItemStore" id="itemStore" scope="singleton" autowire="byName" name="itemStore" />
+    <bean class="api.ListAssignmentStore" id="listAssignmentStore" scope="singleton" autowire="byName" name="listAssignmentStore" />
     <bean class="api.InvitationStore" id="invitationStore" scope="singleton" autowire="byName" name="invitationStore" />
     <bean class="api.UserAPI" id="userAPI" scope="singleton" autowire="byName" name="userAPI" />
     <bean class="api.ToDoListAPI" id="toDoListAPI" scope="singleton" autowire="byName" name="toDoListAPI" />

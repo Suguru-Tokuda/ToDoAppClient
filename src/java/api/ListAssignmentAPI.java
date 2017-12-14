@@ -18,7 +18,7 @@ public class ListAssignmentAPI {
         return BASE_URL;
     }
     
-    public boolean postAssignment(ListAssignment listAssignment) {
+    public boolean postListAssignment(ListAssignment listAssignment) {
         Client client = ClientBuilder.newClient();
         String response = client
                 .target(BASE_URL)
@@ -28,7 +28,7 @@ public class ListAssignmentAPI {
         return true;
     }
     
-    public boolean putAssignment(ListAssignment listAssignment, String id) {
+    public boolean putListAssignment(ListAssignment listAssignment, String id) {
         Client client = ClientBuilder.newClient();
         String putURL = BASE_URL + id;
         String response = client
@@ -39,7 +39,7 @@ public class ListAssignmentAPI {
         return true;
     }
     
-    public boolean deleteAssignment(String id) {
+    public boolean deleteListAssignment(String id) {
         Client client = ClientBuilder.newClient();
         String deleteURL = BASE_URL + id;
         String response = client
@@ -50,7 +50,7 @@ public class ListAssignmentAPI {
         return true;  
     }
     
-    public String getAllAssignments() {
+    public String getAllListAssignments() {
         Client client = ClientBuilder.newClient();
         String requestURL = BASE_URL;
         String response = client

@@ -52,45 +52,55 @@
         <div style="margin-top: 30px;"></div>
         <div class="col-md-6">
             <h2>${toDoList.todolistname}</h2>
-            <form method="post">
+            <form method="GET">
                 <table class="table table-striped table-bordered">
                     <tr>
                         <th class="col-md-1" style="text-align: center;">#</th>
-                        <th class="col-md-1" style="text-align: center;">Finished</th>
                         <th class="col-md-1" style="text-align: center;">Item</th>
-                        <th class="col-md-1" style="text-align: center;">View</th>
+                        <th class="col-md-1" style="text-align: center;">Action</th>
                     </tr>
                     <c:set var="count" value="1" scope="page" />
                     <c:forEach var="item" items="${itemList}">
                         <tr>
-                            <td>${count}</td>
-                            <td><input type="checkbox" value="${item.finished}" name="finished" /></td>
-                                <c:choose>
-                                    <c:when test="${item.important == true}">
+                            <td style="text-align: center;">${count}</td>
+                            <c:choose>
+                                <c:when test="${item.important == true}">
                                     <td style="color: red; font-weight: bold;">${item.itemname}</td>
                                 </c:when>
                                 <c:otherwise>
                                     <td>${item.itemname}</td>
                                 </c:otherwise>
                             </c:choose>
-
-                            <td style="text-align: center;"><input class="btn btn-primary btn-sm" style="width: 70px;" value="View" formaction="${pageContext.request.contextPath}/viewitem" /></td>
+                            <td style="text-align: center;"><input type="submit" class="btn btn-primary btn-sm" style="width: 70px;" value="View" formaction="${pageContext.request.contextPath}/viewitem/${item.id}" /></td>
                         </tr>
                         <c:set var="count" value="${count+1}" scope="page" />
                     </c:forEach>
                 </table>
             </form>
         </div>
+        <div style="margin-top: 68px;"></div>
         <div class="col-md-6">
             <form method="post">
                 <div class="form-grup">
                     <label class="control-label">Item</label>
-                    <input type="text" class="form-control" name="itemname" />
+                    <input type="text" class="form-control" name="itemname" value="${itemToView.itemname}" />
                     <label class="control-label">Due</label>
-                    <input type="text" class="form-control" name="due" placeholder="YYYY-MM-DD" />
+                    <input type="text" class="form-control" name="due" placeholder="YYYY-MM-DD" value="${itemToView.due}" />
                     <label class="form-check-label">
-                        <input type="checkbox" name="important" class="form-check-input">
-                        Important
+                        <input 
+                            <c:choose>
+                                <c:when test="${itemToView.important == true}">     
+                                    checked="true" 
+                                </c:when>
+                                <c:otherwise>
+                                </c:otherwise>
+                            </c:choose>
+                            type="checkbox" name="important" class="form-check-input" value="${itemToView.important}">
+                        Important                            
+                    </label>
+                    <label class="form-check-label">
+                        <input type="checkbox" name="finished" class="form-check-input" value="${itemToView.important}">
+                        Finished
                     </label>
                     <div style="margin-top: 30px;"></div>
                     <div style="margin-top: 30px;" ></div>
