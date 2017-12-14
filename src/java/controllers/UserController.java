@@ -54,6 +54,8 @@ public class UserController {
     InvitationAPI invitationAPI;
     @Autowired
     InvitationStore invitationStore;
+    @Autowired
+    ListAssignmentAPI listAssignmentAPI;
     ToDoList tempToDoListVal;
     List<Item> tempItemList;
     String itemid;
@@ -116,6 +118,12 @@ public class UserController {
             model.addAttribute("signinErrorMsg", signinErrorMsg);
             return "index";
         } else {
+            boolean isConfirmed = this.isConfirmed(email);
+            if (!isConfirmed) {
+                signinErrorMsg = "This email is not confirmed yet. Please see the email.";
+                model.addAttribute("signinErrorMsg", signinErrorMsg);
+                return "index";
+            }
             boolean isLoggedin = setToLoggedin(email, password);
             if (isLoggedin) {
                 tempUser = this.getUser(email);
@@ -275,6 +283,11 @@ public class UserController {
     private boolean isGoodName(String name) {
         return name.length() > 1;
     }
+    
+    private boolean isConfirmed(String email) {
+        tempUser = userStore.getUserByEmail(email);
+        return tempUser.isConfirmed();
+    }
 
     @RequestMapping(value = "/invite/{todolistid}", method = RequestMethod.GET)
     public String showInvitationPage(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) {
@@ -344,6 +357,7 @@ public class UserController {
             tempInvitation = tempInvitationsList.get(0);
             // make an assignment - userid, todolistid
             tempListAssignment = new ListAssignment(useridInSession, todolistid);
+            listAssignmentAPI.postListAssignment(tempListAssignment);
             return "redirect:/getlists";
         }
     }

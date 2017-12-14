@@ -144,7 +144,7 @@ public class ListController {
     }
 
     @RequestMapping(value = "/addnewitem", method = RequestMethod.POST)
-    public String addNewItem(@RequestParam("itemname") String itemname, @RequestParam("due") String due, @RequestParam("important") boolean important, Model model, HttpSession session) {
+    public String addNewItem(@RequestParam("itemname") String itemname, @RequestParam("due") String due, @RequestParam(value = "important", required = false) boolean important, Model model, HttpSession session) {
         String errorMsg = "";
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
@@ -294,6 +294,15 @@ public class ListController {
 
     @RequestMapping(value = "/proceedlistcreation", method = RequestMethod.POST)
     public String proceedListCreation(Model model, HttpSession session, @RequestParam("todolistname") String todolistname, @RequestParam("todolistid") String todolistid) {
+        Calendar now = Calendar.getInstance();
+        int month = now.get(Calendar.MONTH);
+        int date = now.get(Calendar.DATE);
+        int year = now.get(Calendar.YEAR);
+        
+        if (todolistname.isEmpty()) {
+            todolistname = "List " + month + "/" + date + "/" + year;
+        }
+        
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
@@ -310,10 +319,6 @@ public class ListController {
                 }
                 return "redirect:/getlists";
             } else { // create a brandnew list
-                Calendar now = Calendar.getInstance();
-                int month = now.get(Calendar.MONTH);
-                int date = now.get(Calendar.DATE);
-                int year = now.get(Calendar.YEAR);
                 String dateStr = year + "-" + month + "-" + date + "T00:00:00";
                 tempToDoListVal = new ToDoList(todolistname, dateStr, true);
                 toDoListAPI.postToDoList(tempToDoListVal);
@@ -327,9 +332,5 @@ public class ListController {
             }
         }
     }
-    
-
-    
-    
 
 }

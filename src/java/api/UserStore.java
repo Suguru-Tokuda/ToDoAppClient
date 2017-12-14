@@ -12,7 +12,8 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- *
+ * Reffered to http://www.baeldung.com/jackson
+ * and https://www.mkyong.com/java/json-simple-example-read-and-write-json/
  * @author Suguru
  */
 public class UserStore {
