@@ -1,10 +1,12 @@
 package models;
 
+import java.util.Comparator;
+
 /**
  *
  * @author Suguru
  */
-public class Item {
+public class Item implements Comparator {
 
     private String id;
     private String todolistid;
@@ -106,6 +108,19 @@ public class Item {
      */
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        boolean v1 = ((Item) o1).isImportant();
+        boolean v2 = ((Item) o2).isImportant();
+        if (v1 && v2) {
+            return 0;
+        } else if (v1 && !v2) {
+            return 1;
+        } else {
+            return -1;
+        }             
     }
 
 }

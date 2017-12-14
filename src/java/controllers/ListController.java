@@ -10,6 +10,7 @@ import api.ItemStore;
 import api.ListAssignmentAPI;
 import api.ToDoListAPI;
 import api.ToDoListStore;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Calendar;
+import java.util.Collections;
 import models.Item;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -76,20 +78,33 @@ public class ListController {
     }
 
     @RequestMapping(value = "/getlistdetails/{todolistid}", method = RequestMethod.GET)
-    public String showListDetails(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) {
+    public String showListDetails(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) throws IOException {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
         } else {
             this.todolistid = todolistid;
             tempItemList = itemStore.getItemsByToDoListId(todolistid);
+            Collections.sort(tempItemList, (o1, o2) -> {
+                boolean v1 = ((Item) o1).isImportant();
+                boolean v2 = ((Item) o2).isImportant();
+                if (v1 && v2) {
+                    return 0;
+                } else if (v1 && !v2) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+            tempVal = toDoListStore.getToDoListById(todolistid);
+            model.addAttribute("toDoList", tempVal);
             model.addAttribute("itemList", tempItemList);
             return "listdetails";
         }
     }
 
     @RequestMapping(value = "/remove/{todolistid}", method = RequestMethod.DELETE)
-    public String removeList(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) {
+    public String removeList(@PathVariable("todolistid") String todolistid, Model model, HttpSession session) throws IOException {
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
@@ -164,13 +179,13 @@ public class ListController {
                         tempItemList.set(i, tempItem);
                         itemAPI.putItem(tempItem, itemid);
                         break;
-                    }                
+                    }
                 }
                 model.addAttribute("itemList", tempItemList);
                 notificationMsg = "Item updated";
                 model.addAttribute("notificationMsg", notificationMsg);
                 return "listdetails";
-            }            
+            }
         }
     }
 

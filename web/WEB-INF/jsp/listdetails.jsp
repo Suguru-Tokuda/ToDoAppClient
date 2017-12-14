@@ -49,25 +49,31 @@
     </nav>               
     <div style="margin-top: 30px;"></div>
     <main role="main" class="container">
-        <div class="jumbotron">
-            <h1 class="display-3 text-center">To Do List App</h1>
-        </div>
         <div style="margin-top: 30px;"></div>
         <div class="col-md-6">
+            <h2>${toDoList.todolistname}</h2>
             <form method="post">
                 <table class="table table-striped table-bordered">
                     <tr>
-                        <th class="col-md-4" style="text-align: center;">#</th>
-                        <th class="col-md-4" style="text-align: center;">Finished</th>
+                        <th class="col-md-1" style="text-align: center;">#</th>
+                        <th class="col-md-1" style="text-align: center;">Finished</th>
                         <th class="col-md-1" style="text-align: center;">Item</th>
                         <th class="col-md-1" style="text-align: center;">View</th>
                     </tr>
-                    <c:set var="count" value="0" scope="page" />
+                    <c:set var="count" value="1" scope="page" />
                     <c:forEach var="item" items="${itemList}">
                         <tr>
                             <td>${count}</td>
                             <td><input type="checkbox" value="${item.finished}" name="finished" /></td>
-                            <td>${item.name}</td>
+                                <c:choose>
+                                    <c:when test="${item.important == true}">
+                                    <td style="color: red; font-weight: bold;">${item.itemname}</td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td>${item.itemname}</td>
+                                </c:otherwise>
+                            </c:choose>
+
                             <td style="text-align: center;"><input class="btn btn-primary btn-sm" style="width: 70px;" value="View" formaction="${pageContext.request.contextPath}/viewitem" /></td>
                         </tr>
                         <c:set var="count" value="${count+1}" scope="page" />
