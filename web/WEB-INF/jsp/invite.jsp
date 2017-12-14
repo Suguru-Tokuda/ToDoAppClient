@@ -59,6 +59,8 @@
                     <input type="hidden" name="todolistid" value="${toDoList.id}" />
                     <div style="margin-top: 30px;"></div>
                     <input type="submit" class="btn btn-success" value="Invite" formaction="${pageContext.request.contextPath}/sendinvitation" />
+                    <div style="margin-top: 30px;"></div>
+                    <label class="control-label" style="color: red;">${errorMsg}</label>
                 </form>
             </div>
         </div>

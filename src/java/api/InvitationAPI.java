@@ -61,9 +61,9 @@ public class InvitationAPI {
         return response;
     }
     
-    public String getInvitationsByReceiverid(String receiverid) {
+    public String getInvitationsByReceiveridAndToDoListId(String receiverid, String todolistid) {
         Client client = ClientBuilder.newClient();
-        String requestURL = BASE_URL + "getInvitationsByReceiverid/" + receiverid;
+        String requestURL = BASE_URL + "getInvitationsByReceiveridAndToDoListId/" + receiverid + "/" + todolistid;
         String response = client
                 .target(requestURL)
                 .request(MediaType.APPLICATION_JSON)

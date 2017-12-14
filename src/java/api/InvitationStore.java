@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Suguru
  */
 public class InvitationStore {
-    
+
     private List<Invitation> tempInvitationList;
     private Invitation tempInvitation;
     @Autowired
@@ -28,7 +28,7 @@ public class InvitationStore {
     String jsonString;
     JSONArray jsonArray;
 
-    public List<Invitation> getAllitems() throws ParseException, IOException {
+    public List<Invitation> getAllitems() {
         jsonString = invitationAPI.getAllInvitations();
 
         mapper = new ObjectMapper();
@@ -41,16 +41,13 @@ public class InvitationStore {
                 tempInvitationList.add(tempInvitation);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempInvitation = mapper.readValue(jsonObject.toString(), Invitation.class);
-            tempInvitationList.add(tempInvitation);
+            System.out.println(ex);
         }
         return tempInvitationList;
     }
-    
-    public List<Invitation> getInvitationsByReceiverId(String ReceiverId) throws IOException, ParseException {
-        jsonString = invitationAPI.getInvitationsByReceiverid(ReceiverId);
+
+    public List<Invitation> getInvitationsByReceiverId(String receiverid, String todolistid) {
+        jsonString = invitationAPI.getInvitationsByReceiveridAndToDoListId(receiverid, todolistid);
         mapper = new ObjectMapper();
         tempInvitation = null;
         tempInvitationList = new ArrayList<>();
@@ -61,12 +58,9 @@ public class InvitationStore {
                 tempInvitationList.add(tempInvitation);
             }
         } catch (Exception ex) {
-            JSONObject jsonObject = (JSONObject) jParser.parse(jsonString);
-            System.out.println(jsonObject);
-            tempInvitation = mapper.readValue(jsonObject.toString(), Invitation.class);
-            tempInvitationList.add(tempInvitation);
+            System.out.println(ex);
         }
         return tempInvitationList;
     }
-    
+
 }

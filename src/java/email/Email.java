@@ -14,7 +14,6 @@ import models.User;
 
 /**
  * This class sends email to users. Referred from:
- * https://www.javatpoint.com/example-of-sending-email-using-java-mail-api
  * https://www.mkyong.com/java/javamail-api-sending-email-via-gmail-smtp-example/
  *
  * @author Suguru
@@ -41,8 +40,8 @@ public class Email {
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
-        session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
-            @Override
+        session = Session.getInstance(properties,
+                new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
@@ -57,12 +56,13 @@ public class Email {
             body = "<html>\n"
                     + "<body>\n"
                     + "<p>Dear " + receiver.getFirstname() + ",</p>\n"
-                    + "<p>" + sender.getFirstname() + " has sent you an invitation for the list, " + toDoList.getTodolistname() + ". "
+                    + "<p>" + sender.getFirstname() + " has sent you an invitation for " + toDoList.getTodolistname() + ". "
                     + "Please confirm the invitatoin from the link below:</p><br>"
-                    + "<a href=\"http://localhost:8080/ToDoAppClient/confirminvitation/\"" + toDoList.getId() + "\">http://localhost:8080/ToDoAppClient/confirminvitation/" + toDoList.getId() + "</a><br>\n"
+                    + "<a href=\"http://localhost:8080/ToDoAppClient/confirminvitation/" + toDoList.getId() + "\">http://localhost:8080/ToDoAppClient/confirminvitation/" + toDoList.getId() + "</a><br>\n"
                     + "<p>Regards,<br> Suguru Tokuda</p>\n"
                     + "</body>\n"
                     + "<html>";
+            
             message.setContent(body, "text/html");
             Transport.send(message);
             return true;

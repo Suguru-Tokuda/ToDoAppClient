@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpSession;
 import models.Invitation;
 import models.Item;
+import models.ListAssignment;
 import models.ToDoList;
 import models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,8 @@ public class UserController {
     String itemid;
     String todolistid;
     Invitation tempInvitation;
+    List<Invitation> tempInvitationsList;
+    ListAssignment tempListAssignment;
 
     // referred from: https://stackoverflow.com/questions/8204680/java-regex-email
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -73,8 +76,8 @@ public class UserController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String viewIndex(HttpSession session, Model model) {
-        emailInSession = (String) session.getAttribute("email");
-        if (emailInSession != null) {
+        usernameInSession = (String) session.getAttribute("userid");
+        if (usernameInSession != null) {
             return "redirect:/getlists";
         }
         return "index";
@@ -85,14 +88,15 @@ public class UserController {
      */
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     private String logout(HttpSession session) {
-        session.setAttribute("username", null);
+        session.removeAttribute("userid");
+        session.removeAttribute("email");
         return "redirect:/";
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String showSignup(HttpSession session) {
-        emailInSession = (String) session.getAttribute("userid");
-        if (emailInSession != null) {
+        usernameInSession = (String) session.getAttribute("userid");
+        if (usernameInSession != null) {
             return "redirect:/getlists";
         } else {
             return "signup";
@@ -101,8 +105,8 @@ public class UserController {
 
     @RequestMapping(value = "/processsignin", method = RequestMethod.POST)
     public String processSignin(@RequestParam("email") String email, @RequestParam("signinPassword") String password, Model model, HttpSession session) throws ParseException, IOException, org.json.simple.parser.ParseException {
-        emailInSession = (String) session.getAttribute("email");
-        if (emailInSession != null) {
+        usernameInSession = (String) session.getAttribute("userid");
+        if (usernameInSession != null) {
             return "redirect:/getlists";
         }
         String signinErrorMsg = "";
@@ -244,8 +248,24 @@ public class UserController {
         Iterator<User> it = tempUserList.iterator();
         while (it.hasNext()) {
             tempUser = it.next();
-            if (tempUser.getEmail().equals(email)) {
+            if (tempUser.getEmail().equalsIgnoreCase(email)) {
                 retVal = false;
+                break;
+            }
+        }
+        return matcher.find() && retVal;
+    }
+
+    private boolean isGoodEmailToInvite(String email) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        // also needs to check if the email is in use already.
+        tempUserList = userStore.getAllUsers();
+        boolean retVal = false;
+        Iterator<User> it = tempUserList.iterator();
+        while (it.hasNext()) {
+            tempUser = it.next();
+            if (tempUser.getEmail().equalsIgnoreCase(email)) {
+                retVal = true;
                 break;
             }
         }
@@ -271,17 +291,60 @@ public class UserController {
 
     @RequestMapping(value = "/sendinvitation", method = RequestMethod.POST)
     public String sendInvitation(@RequestParam("receiverEmail") String receiverEmail, @RequestParam("todolistid") String todolistid, Model model, HttpSession session) {
+        String errorMsg = "";
         useridInSession = (String) session.getAttribute("userid");
         if (useridInSession == null) {
             return "redirect:/";
         } else {
             tempUser = userStore.getUserById(useridInSession);
-            User receiver = userStore.getUserByEmail(receiverEmail);
-            tempInvitation = new Invitation(tempUser.getId(), receiverEmail, todolistid);
-            invitationAPI.postInvitation(tempInvitation);
-            emailSender.sendInvitationEmail(tempUser, receiver, tempToDoListVal);
-            model.addAttribute("receiver", receiver);
-            return "invitationsentconfirm";
+            if (tempUser.getEmail().equalsIgnoreCase(receiverEmail)) {
+                errorMsg = "you cannot invite yourself.";
+                model.addAttribute("errorMsg", errorMsg);
+                tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+                this.todolistid = tempToDoListVal.getId();
+                model.addAttribute("toDoList", tempToDoListVal);
+                return "invite";
+            }
+            if (receiverEmail.isEmpty()) {
+                errorMsg = "Fill in the blank.";
+                model.addAttribute("errorMsg", errorMsg);
+                tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+                this.todolistid = tempToDoListVal.getId();
+                model.addAttribute("toDoList", tempToDoListVal);
+                return "invite";
+            }
+            boolean isGoodEmail = this.isGoodEmailToInvite(receiverEmail);
+            if (!isGoodEmail) {
+                errorMsg = "Invalid email";
+                model.addAttribute("errorMsg", errorMsg);
+                tempToDoListVal = toDoListStore.getToDoListById(todolistid);
+                this.todolistid = tempToDoListVal.getId();
+                model.addAttribute("toDoList", tempToDoListVal);
+                return "invite";
+            } else {
+                tempUser = userStore.getUserById(useridInSession);
+                User receiver = userStore.getUserByEmail(receiverEmail);
+                tempInvitation = new Invitation(tempUser.getId(), receiver.getId(), todolistid);
+                invitationAPI.postInvitation(tempInvitation);
+                emailSender.sendInvitationEmail(tempUser, receiver, tempToDoListVal);
+                model.addAttribute("receiver", receiver);
+                return "invitationsentconfirm";
+            }
+        }
+    }
+
+    @RequestMapping(value = "/confirminvitation/{todolistid}")
+    public String confirmInvitation(@PathVariable("todolistid") String todolistid, HttpSession session, Model model) {
+        useridInSession = (String) session.getAttribute("userid");
+        if (useridInSession == null) {
+            return "redirect:/";
+        } else {
+            // get invitation object by todolistid
+            tempInvitationsList = invitationStore.getInvitationsByReceiverId(useridInSession, todolistid);
+            tempInvitation = tempInvitationsList.get(0);
+            // make an assignment - userid, todolistid
+            tempListAssignment = new ListAssignment(useridInSession, todolistid);
+            return "redirect:/getlists";
         }
     }
 

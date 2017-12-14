@@ -12,16 +12,17 @@ package models;
 public class Invitation {
 
     private String id;
-    private String senderid;
     private String receiverid;
+    private String senderid;
     private String todolistid;
 
     public Invitation() {
+
     }
 
-    public Invitation(String senderid, String receiverid, String todolistid) {
-        this.senderid = senderid;
+    public Invitation(String receiverid, String senderid, String todolistid) {
         this.receiverid = receiverid;
+        this.senderid = senderid;
         this.todolistid = todolistid;
     }
 
@@ -40,20 +41,6 @@ public class Invitation {
     }
 
     /**
-     * @return the senderid
-     */
-    public String getSenderid() {
-        return senderid;
-    }
-
-    /**
-     * @param senderid the senderid to set
-     */
-    public void setSenderid(String senderid) {
-        this.senderid = senderid;
-    }
-
-    /**
      * @return the receiverid
      */
     public String getReceiverid() {
@@ -68,16 +55,30 @@ public class Invitation {
     }
 
     /**
+     * @return the senderid
+     */
+    public String getSenderid() {
+        return senderid;
+    }
+
+    /**
+     * @param senderid the senderid to set
+     */
+    public void setSenderid(String senderid) {
+        this.senderid = senderid;
+    }
+
+    /**
      * @return the todolistid
      */
-    public String getToDoListid() {
+    public String getTodolistid() {
         return todolistid;
     }
 
     /**
      * @param todolistid the todolistid to set
      */
-    public void setToDoListid(String todolistid) {
+    public void setTodolistid(String todolistid) {
         this.todolistid = todolistid;
     }
 
