@@ -7,6 +7,7 @@ package controllers;
 
 import api.UserAPI;
 import api.UserStore;
+import email.Email;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Iterator;
@@ -36,6 +37,8 @@ public class UserController {
     UserStore userStore;
     @Autowired
     UserAPI userAPI;
+    @Autowired
+    Email emailSender;
 
     // referred from: https://stackoverflow.com/questions/8204680/java-regex-email
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -129,7 +132,13 @@ public class UserController {
             tempUser = new User(firstname, lastname, email, password);
             userAPI.postUser(tempUser);
             // have to send a confirmation email.
-            return this.showSignupSuccess(tempUser, model);
+            if (emailSender.sendConfirmationEmail(tempUser)) {
+                model.addAttribute("user", tempUser);
+                return "confirmemailsent";
+            } else {
+                model.addAttribute("user", tempUser);
+                return "resendconfirmemail";
+            }
         } else {
             if (!isGoodName) {
                 signupErrorMsg += "Name has to have at least 2 characters.<br>";
@@ -163,6 +172,14 @@ public class UserController {
         } else {
             return "redirect:/";
         }
+    }
+
+    @RequestMapping(value = "/resendconfemail", method = RequestMethod.POST)
+    public String resendConfEmail(Model model, @RequestParam("email") String email, @RequestParam("firstname") String firstname, @RequestParam("lastmame") String lastname, @RequestParam("password") String password) {
+        tempUser = new User(firstname, lastname, email, password);
+        emailSender.sendConfirmationEmail(tempUser);
+        model.addAttribute("user", tempUser);
+        return "confirmemailsent";
     }
 
     private boolean setToLoggedin(String email, String password) throws org.json.simple.parser.ParseException, IOException {

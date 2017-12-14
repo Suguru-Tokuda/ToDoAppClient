@@ -27,4 +27,6 @@
     <bean class="api.ItemAPI" id="itemAPI" scope="singleton" autowire="byName" name="itemAPI" />
     <bean class="api.ListAssignmentAPI" id="listAssigmentAPI" scope="singleton" autowire="byName" name="listAssignmentAPI" />
     <bean class="api.InvitationAPI" id="invitationAPI" scope="singleton" autowire="byName" name="invitationAPI" />
+    <bean class="email.Email" id="emailSender" scope="singleton" autowire="byName" name="emailSender" />
+    
 </beans>
